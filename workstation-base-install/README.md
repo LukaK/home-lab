@@ -14,7 +14,7 @@ Requirements:
 - bash
 
 
-### usage
+### Usage
 
 ```
 # configuration options
