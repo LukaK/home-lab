@@ -6,9 +6,9 @@ Configuration:
 - uefi boot
 - partitioning: 800M boot partition, the rest is encrypted btrfs root and home partitions
 - systemd boot loader
-- system configuration in `group_vars/all.yaml`
 - creates `ansible` user for system management
-- ... ( todo: add specifics for system configuration )
+- configure localzone, hostname and locales
+- install core packages and enable services ( fstrim, reflector, network manager, sshd, firewall )
 
 Requirements:
 - bash
@@ -17,5 +17,9 @@ Requirements:
 ### usage
 
 ```
+# configuration options
+vim group_vars/all.yaml
+
+# start interactive base system installation
 bash install-base-system.sh -d <disc>
 ```
