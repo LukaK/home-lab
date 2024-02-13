@@ -11,12 +11,11 @@ Configuration:
 - ... ( todo: add specifics for system configuration )
 
 Requirements:
-- ansible
 - bash
 
 
 ### usage
 
 ```
-bash install-system.sh -d <disc>
+bash install-base-system.sh -d <disc>
 ```
