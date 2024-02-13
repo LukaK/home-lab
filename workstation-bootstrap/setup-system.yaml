@@ -1,0 +1,264 @@
+---
+
+- name: Check variables
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+
+
+    - name: Ensure disc variable is set
+      ansible.builtin.assert:
+        that: disc is defined
+        fail_msg: "Disc variable is not set"
+
+
+- name: Create inital ram disc image
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+
+
+    - name: Update initramfs configuration
+      ansible.builtin.lineinfile:
+        path: /etc/mkinitcpio.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+        state: present
+        backrefs: true
+      loop:
+        - {regexp: '^MODULES=()', line: 'MODULES=(btrfs)'}
+        - {regexp: '^HOOKS=(.*) block filesystems (.*)$', line: 'HOOKS=\1 block encrypt filesystems \2'}
+
+
+    # TODO: Uncomment fail condition when issue with exit codes is fixed
+    - name: Execute mkinitcpio command
+      ansible.builtin.command: /usr/bin/mkinitcpio -p linux
+      register: mkinitcpio_result
+      changed_when: true
+      # failed_when: mkinitcpio_result.rc != 0
+      failed_when: false
+
+
+- name: Configure bootloader
+  hosts: localhost
+  connection: local
+  gather_facts: true
+  tasks:
+
+
+    - name: Find disc uuid information
+      set_fact:
+        rootuuid: "{{ ansible_facts.devices['dm-0']['links']['uuids'][0] }}"
+        deviceuuid: "{{ item.value['links']['uuids'][0] }}"
+      with_dict: "{{ ansible_facts.devices[disc | split('/') | last]['partitions'] }}"
+      when: "(item.value['links']['uuids'][0] | length) == 36"
+
+
+    - name: Install systemd bootloader
+      ansible.builtin.command: /usr/bin/bootctl --path=/boot install
+      register: bootctl_result
+      failed_when: bootctl_result.rc != 0
+      changed_when: true
+
+
+    - name: Configure boot loader
+      ansible.builtin.blockinfile:
+        path: /boot/loader/loader.conf
+        block: |
+          timeout 5
+          default arch
+
+
+    - name: Configure arch entry
+      ansible.builtin.blockinfile:
+        path: /boot/loader/entries/arch.conf
+        create: true
+        block: |
+          title Arch Linux
+          linux /vmlinuz-linux
+          initrd /initramfs-linux.img
+          options cryptdevice=UUID={{ deviceuuid }}:root root=UUID={{ rootuuid }} rootflags=subvol=@ rw
+
+
+    - name: Configure arch fallback entry
+      ansible.builtin.blockinfile:
+        path: /boot/loader/entries/arch-fallback.conf
+        create: true
+        block: |
+          title Arch Linux Fallback
+          linux /vmlinuz-linux
+          initrd /initramfs-linux-fallback.img
+          options cryptdevice=UUID={{ deviceuuid }}:root root=UUID={{ rootuuid }} rootflags=subvol=@ rw
+
+
+- name: Configure system
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+
+
+    - name: Link timezone
+      ansible.builtin.file:
+        src: /usr/share/zoneinfo/{{ timezone }}
+        dest: /etc/localtime
+        owner: root
+        group: root
+        state: link
+
+
+    - name: Ensure hostname is set
+      ansible.builtin.lineinfile:
+        path: /etc/hostname
+        regexp: "^"
+        line: "{{ hostname }}"
+        create: true
+
+
+    - name: Ensure hosts file is set
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        regexp: "^127.0.0.1"
+        line: "127.0.0.1 {{ hostname }}"
+        create: true
+
+
+    - name: Generate locale
+      community.general.locale_gen:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ locale_list }}"
+
+
+- name: User management
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+
+    - name: Ensure ansible user present
+      ansible.builtin.user:
+        name: ansible
+        password_lock: true
+
+
+    - name: Ensure ssh key configuration for ansible user
+      ansible.posix.authorized_key:
+        user: ansible
+        state: present
+        exclusive: true
+        key: "{{ ansible_public_key }}"
+
+
+    - name: Create sudoers entry for ansible user
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers.d/ansible
+        line: "ansible ALL = (ALL) NOPASSWD: ALL"
+        state: present
+        create: true
+        owner: root
+        group: root
+        mode: '0440'
+
+
+- name: Install core packages and services
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  tasks:
+
+
+    - name: Install system packages
+      community.general.pacman:
+        state: present
+        update_cache: true
+        name:
+          - base-devel
+          - linux-headers
+          - inetutils
+          - efibootmgr
+          - xdg-user-dirs
+          - xdg-utils
+          - alsa-utils
+          - pipewire
+          - pipewire-alsa
+          - pipewire-pulse
+          - pipewire-jack
+          - sof-firmware
+          - mtools
+          - dosfstools
+          - nfs-utils
+          - ntfs-3g
+          - gvfs
+          - gvfs-smb
+          - acpi
+          - acpi_call
+          - acpid
+          - bash-completion
+          - os-prober
+          - reflector
+          - pacman-contrib
+
+
+    - name: Start acpid
+      ansible.builtin.service:
+        name: acpid
+        state: started
+        enabled: true
+
+
+    - name: Start reflector
+      ansible.builtin.service:
+        name: reflector.timer
+        state: started
+        enabled: true
+
+
+    - name: Start fstrim
+      ansible.builtin.service:
+        name: fstrim.timer
+        state: started
+        enabled: true
+
+
+    # TODO: Fix nftables
+    - name: Install network tools
+      community.general.pacman:
+        state: present
+        update_cache: true
+        name:
+          - dnsutils
+          - openbsd-netcat
+          # - iptables-nft
+          - ipset
+          - net-tools
+          - networkmanager
+          - network-manager-applet
+          - dialog
+          - wpa_supplicant
+          - ufw
+          - openssh
+          - sshpass
+
+
+    - name: Start network manager
+      ansible.builtin.service:
+        name: NetworkManager
+        state: started
+        enabled: true
+
+
+    - name: Start firewall service
+      ansible.builtin.service:
+        name: ufw
+        state: started
+        enabled: true
+
+
+    - name: Start sshd
+      ansible.builtin.service:
+        name: sshd
+        state: started
+        enabled: true
