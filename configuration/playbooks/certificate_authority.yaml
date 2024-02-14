@@ -5,6 +5,10 @@
   become: true
   roles:
     - role: core
+      timezone: "{{ i_timezone }}"
+      ansible_public_key_path: "{{ i_ansible_public_key_path }}"
+      locale_list: "{{ i_locale_list }}"
+
     - role: update
     - role: sshd
     - role: vm_guest

@@ -8,7 +8,11 @@
     ansible_ssh_pass: "{{ bootstrap_pass }}"
     ansible_become_pass: "{{ bootstrap_pass }}"
   roles:
-    - core
+    - role: core
+      timezone: "{{ i_timezone }}"
+      ansible_public_key_path: "{{ i_ansible_public_key_path }}"
+      locale_list: "{{ i_locale_list }}"
+
 
 - name: Prepare proxmox server
   hosts: proxmox_servers
