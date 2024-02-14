@@ -1,0 +1,3 @@
+[submodule "configuration/inventory"]
+	path = configuration/inventory
+	url = git@github.com:LukaK/sute.git
