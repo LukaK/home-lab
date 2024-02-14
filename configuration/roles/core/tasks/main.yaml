@@ -4,6 +4,9 @@
   ansible.builtin.user:
     name: ansible
     password_lock: true
+    groups: wheel
+    append: true
+    state: present
 
 
 - name: Ensure ssh key configuration for ansible user

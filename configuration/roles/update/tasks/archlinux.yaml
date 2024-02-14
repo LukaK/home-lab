@@ -23,7 +23,7 @@
       become_user: ansible
       kewlfft.aur.aur:
         use: paru
-        update_cache: true
+        aur_only: true
         upgrade: true
 
   rescue:

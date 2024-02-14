@@ -13,6 +13,7 @@
     - role: sshd
     - role: firewall
     - role: docker
+
     - role: workstation
       root_password: "{{ i_root_pass }}"
       users: "{{ i_user_configs }}"
