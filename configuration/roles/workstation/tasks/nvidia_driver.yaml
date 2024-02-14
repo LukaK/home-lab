@@ -32,10 +32,9 @@
 - name: Add early loading of nvidia kernel modules
   ansible.builtin.lineinfile:
     path: /etc/mkinitcpio.conf
-    regexp: '^MODULES=(btrfs)'
+    regexp: '^MODULES=\(btrfs\)$'
     line: 'MODULES=(btrfs nvidia nvidia_modeset nvidia_uvm nvidia_drm)'
-    state: present
-    # backrefs: true
+    backrefs: true
   notify:
     - Build initramd
     - Reboot the system
