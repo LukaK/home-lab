@@ -10,5 +10,5 @@
     - role: firewall
     - role: docker
     - role: workstation
-      root_password: "{{ workstation_root_pass }}"
-      users: "{{ workstation_users }}"
+      root_password: "{{ root_pass }}"
+      users: "{{ users_config }}"

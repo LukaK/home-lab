@@ -52,7 +52,7 @@
 - name: Ensure pihole container is started
   community.docker.docker_container:
     name: pihole
-    image: "{{ pihole_image }}"
+    image: "{{ docker_image }}"
     pull: true
     restart_policy: unless-stopped
     env:

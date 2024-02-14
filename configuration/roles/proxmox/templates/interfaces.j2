@@ -13,7 +13,7 @@ iface vmbr0 inet static
 
 auto vmbr0.10
 iface vmbr0.10 inet static
-  address {{ ansible_host }}{{ network_mask_slash }}
+  address {{ ansible_host }}{{ network_mask }}
   gateway {{ default_gateway }}
 
 auto vmbr0.20

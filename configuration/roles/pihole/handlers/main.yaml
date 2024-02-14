@@ -19,6 +19,6 @@
 - name: Restart pihole container
   community.docker.docker_container:
     name: pihole
-    image: "{{ pihole_image }}"
+    image: "{{ docker_image }}"
     state: started
     restart: true

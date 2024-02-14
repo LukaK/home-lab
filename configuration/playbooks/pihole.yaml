@@ -11,4 +11,5 @@
     - role: firewall
     - role: docker
     - role: pihole
-      admin_password: "{{ pihole_password }}"
+      admin_password: "{{ password }}"
+      docker_image: "{{ image }}"
