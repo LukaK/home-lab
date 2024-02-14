@@ -2,11 +2,11 @@
 
 - name: Ensure ansible user is present
   hosts: proxmox_servers
-  remote_user: "{{ bootstrap_user }}"
+  remote_user: "{{ i_bootstrap_user }}"
   become: true
   vars:
-    ansible_ssh_pass: "{{ bootstrap_pass }}"
-    ansible_become_pass: "{{ bootstrap_pass }}"
+    ansible_ssh_pass: "{{ i_bootstrap_pass }}"
+    ansible_become_pass: "{{ i_bootstrap_pass }}"
   roles:
     - role: core
       timezone: "{{ i_timezone }}"
