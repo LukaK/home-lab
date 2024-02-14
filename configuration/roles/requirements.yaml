@@ -1,6 +1,3 @@
 ---
-
-# collections:
 collections:
   - name: kewlfft.aur
-  - name: pfsensible.core

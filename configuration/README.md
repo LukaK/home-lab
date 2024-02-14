@@ -27,3 +27,8 @@ Requirements:
 - ansible
 
 #### Usage
+
+```
+# install requirements
+ansible-galaxy install -r roles/requirements.yaml
+```
