@@ -33,7 +33,7 @@
       community.crypto.openssl_privatekey:
         path: /ca/private/root-ca.key
         size: 4096
-        passphrase: "{{ root_ca_pass }}"
+        passphrase: "{{ i_root_ca_pass }}"
         cipher: auto
 
 
@@ -41,7 +41,7 @@
       community.crypto.openssl_csr:
         path: /ca/csr/root-ca.csr
         privatekey_path: /ca/private/root-ca.key
-        privatekey_passphrase: "{{ root_ca_pass }}"
+        privatekey_passphrase: "{{ i_root_ca_pass }}"
         common_name: Ansible CA
         basic_constraints:
           - 'CA:TRUE'
@@ -55,7 +55,7 @@
       community.crypto.x509_certificate:
         path: /ca/certs/root-ca.crt
         privatekey_path: /ca/private/root-ca.key
-        privatekey_passphrase: "{{ root_ca_pass }}"
+        privatekey_passphrase: "{{ i_root_ca_pass }}"
         csr_path: /ca/csr/root-ca.csr
         provider: selfsigned
         selfsigned_not_after: "+36500d"
@@ -65,7 +65,7 @@
       community.crypto.openssl_privatekey:
         path: "/ca/private/{{ item.hostname }}.key"
         size: 2048
-      loop: "{{ ssl_configuration }}"
+      loop: "{{ i_ssl_configuration }}"
 
 
     - name: Generate an openssl csr
@@ -73,7 +73,7 @@
         path: "/ca/csr/{{ item.hostname }}.csr"
         privatekey_path: /ca/private/{{ item.hostname }}.key
         subject_alt_name: "{{ item.subject_alt_name }}"
-      loop: "{{ ssl_configuration }}"
+      loop: "{{ i_ssl_configuration }}"
 
 
     - name: Generate a Self Signed OpenSSL certificate
@@ -83,6 +83,6 @@
         provider: ownca
         ownca_path: /ca/certs/root-ca.crt
         ownca_privatekey_path: /ca/private/root-ca.key
-        ownca_privatekey_passphrase: "{{ root_ca_pass }}"
+        ownca_privatekey_passphrase: "{{ i_root_ca_pass }}"
         ownca_not_after: "+36500d"
-      loop: "{{ ssl_configuration }}"
+      loop: "{{ i_ssl_configuration }}"
