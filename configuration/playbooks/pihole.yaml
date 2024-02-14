@@ -14,7 +14,10 @@
     - role: vm_guest
     - role: firewall
     - role: docker
+
     - role: pihole
-      admin_password: "{{ password }}"
-      docker_image: "{{ image }}"
+      admin_password: "{{ i_admin_password }}"
+      docker_image: "{{ i_docker_image }}"
       timezone: "{{ i_timezone }}"
+      ssl_cert: "{{ i_ssl_cert }}"
+      ssl_key: "{{ i_ssl_key }}"
