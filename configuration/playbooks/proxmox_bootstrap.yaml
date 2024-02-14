@@ -1,0 +1,57 @@
+---
+
+- name: Prepare proxmox server
+  hosts: proxmox_servers
+  remote_user: "{{ vault_bootstrap_user }}"
+  become: true
+  vars_files:
+    - "{{ inventory_dir }}/bootstrap_vars/{{ inventory_hostname }}"
+  vars:
+    ansible_ssh_pass: "{{ vault_bootstrap_pass }}"
+    ansible_become_pass: "{{ vault_bootstrap_pass }}"
+  tasks:
+
+    - name: Comment out enterprise sources list
+      ansible.builtin.replace:
+        path: "{{ item }}"
+        regexp: '^([^#].*)'
+        replace: '#\1'
+      loop:
+        - /etc/apt/sources.list.d/pve-enterprise.list
+        - /etc/apt/sources.list.d/ceph.list
+
+    - name: Create rsolv file
+      copy:
+        dest: /etc/resolv.conf
+        owner: root
+        group: root
+        mode: '0644'
+        content: |
+          nameserver 10.0.10.94
+          nameserver 1.1.1.1
+          nameserver 8.8.8.8
+
+    - name: Update apt packages
+      ansible.builtin.apt:
+        upgrade: dist
+        update_cache: true
+        autoclean: true
+        autoremove: true
+        cache_valid_time: 3600
+        force_apt_get: true
+
+    - name: Install sudo package
+      ansible.builtin.apt:
+        force_apt_get: true
+        pkg: sudo
+        state: present
+        update_cache: true
+
+    - name: Check if reboot is needed
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+      register: reboot_required
+
+    - name: Reboot the system
+      ansible.builtin.reboot:
+      when: reboot_required.stat.exists

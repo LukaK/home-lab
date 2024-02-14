@@ -1,0 +1,7 @@
+---
+
+- name: Move root certificate
+  ansible.builtin.copy:
+    dest: /etc/ca-certificates/trust-source/anchors/root-ca.crt
+    content: "{{ root_ca_cert }}"
+  notify: Update trusted certificates

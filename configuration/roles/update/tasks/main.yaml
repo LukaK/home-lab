@@ -1,0 +1,5 @@
+---
+
+- name: Include distribution update packages tasks
+  ansible.builtin.include_tasks:
+    file: "{{ ansible_facts['distribution'] | lower }}.yaml"

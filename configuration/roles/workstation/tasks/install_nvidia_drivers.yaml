@@ -1,0 +1,58 @@
+---
+
+- name: Install nvidia packages
+  community.general.pacman:
+    state: present
+    update_cache: true
+    name:
+      - nvidia
+      - nvidia-utils
+      - nvtop
+
+- name: Install nvidia settings
+  kewlfft.aur.aur:
+    use: paru
+    state: present
+    name:
+      - nvidia-settings
+  become: true
+  become_user: ansible
+
+- name: Enable drm kernel mode
+  ansible.builtin.lineinfile:
+    path: "{{ item }}"
+    regexp: '^(options .*rw)$'
+    line: '\1 nvidia-drm.modeset=1'
+    backrefs: true
+  loop:
+    - /boot/loader/entries/arch.conf
+    - /boot/loader/entries/arch-fallback.conf
+
+
+- name: Add early loading of nvidia kernel modules
+  ansible.builtin.lineinfile:
+    path: /etc/mkinitcpio.conf
+    regexp: '^MODULES=(btrfs)'
+    line: 'MODULES=(btrfs nvidia nvidia_modeset nvidia_uvm nvidia_drm)'
+    state: present
+    # backrefs: true
+  notify:
+    - Build initramd
+    - Reboot the system
+
+
+- name: Create pacman hooks directory
+  ansible.builtin.file:
+    path: /etc/pacman.d/hooks/
+    state: directory
+    mode: '0751'
+
+- name: Download pacman hook
+  ansible.builtin.get_url:
+    url: https://raw.githubusercontent.com/korvahannu/arch-nvidia-drivers-installation-guide/main/nvidia.hook
+    dest: /etc/pacman.d/hooks/
+    mode: '0644'
+
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

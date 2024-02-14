@@ -1,0 +1,14 @@
+---
+
+- name: Ensure server is configured
+  hosts: pihole.lab
+  become: true
+  roles:
+    - role: core
+    - role: update
+    - role: sshd
+    - role: vm_guest
+    - role: firewall
+    - role: docker
+    - role: pihole
+      admin_password: "{{ pihole_password }}"

@@ -1,0 +1,13 @@
+192.168.1.10 unifi.lab
+10.0.10.92 heimdall.lab
+10.0.10.94 pihole.lab
+10.0.10.92 portainer.lab
+10.0.10.95 printer.lab
+10.0.10.99 proxmox1.lab
+10.0.10.98 proxmox2.lab
+10.0.10.97 proxmox3.lab
+10.0.10.30 workstation1.lab
+10.0.10.31 workstation2.lab
+10.0.10.32 workstation3.lab
+10.0.10.96 nas.lab
+10.0.10.91 ca.lab

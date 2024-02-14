@@ -1,0 +1,8 @@
+---
+
+- name: Install openssh-server daemon
+  ansible.builtin.apt:
+    force_apt_get: true
+    pkg: openssh-server
+    state: present
+    update_cache: true

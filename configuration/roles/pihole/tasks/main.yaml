@@ -1,0 +1,102 @@
+---
+
+- name: Include ubuntu configuration tasks
+  ansible.builtin.include_tasks:
+    file: "{{ ansible_facts['distribution'] | lower }}_setup.yaml"
+
+
+- name: Ensure pihole directories are created
+  ansible.builtin.file:
+    path: "{{ item }}"
+    owner: root
+    group: root
+    state: directory
+    mode: '0755'
+  loop:
+    - /pihole
+    - /pihole/pihole
+    - /pihole/dnsmasq.d
+    - /pihole/lighttpd/
+
+- name: Set path to the pem file
+  ansible.builtin.set_fact:
+    pihole_pem_path: /etc/lighttpd/combined.pem
+
+
+- name: Copy custom dns list
+  ansible.builtin.copy:
+    src: "custom.list"
+    dest: "/pihole/pihole/custom.list"
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Restart pihole container
+
+- name: Copy external configuration
+  ansible.builtin.template:
+    src: external.conf.j2
+    dest: /pihole/lighttpd/external.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+
+- name: Copy certificate files
+  ansible.builtin.copy:
+    dest: "/pihole/lighttpd/combined.pem"
+    content: "{{ ssl_key }}{{ ssl_cert }}"
+    mode: '0660'
+
+
+- name: Ensure pihole container is started
+  community.docker.docker_container:
+    name: pihole
+    image: "{{ pihole_image }}"
+    pull: true
+    restart_policy: unless-stopped
+    env:
+      TZ: "{{ timezone }}"
+      WEBPASSWORD: "{{ admin_password }}"
+      PIHOLE_DNS_: "1.1.1.1;8.8.8.8"
+      DNSMASQ_LISTENING: "local"
+    dns_servers:
+      - 127.0.0.1
+      - 1.1.1.1
+      - 8.8.8.8
+    network_mode: host
+    volumes:
+      - "/pihole/pihole/:/etc/pihole"
+      - "/pihole/dnsmasq.d/:/etc/dnsmasq.d/"
+      - "/pihole/lighttpd/external.conf:/etc/lighttpd/conf-enabled/external.conf"
+      - "/pihole/lighttpd/combined.pem:/etc/lighttpd/combined.pem"
+    log_driver: json-file
+    log_options:
+      max-size: "10m"
+      max-file: "5"
+
+
+- name: Remove old docker image versions
+  community.docker.docker_prune:
+    images: true
+    images_filters:
+      dangling: false
+
+
+- name: Allow pihole ports in firewall
+  community.general.ufw:
+    insert: 1
+    rule: allow
+    port: "{{ item.port }}"
+    comment: "{{ item.comment }}"
+  loop:
+    - {port: "80", comment: "ALLOW HTTP port", protocol: "tcp"}
+    - {port: "53", comment: "ALLOW DNS port", protocol: "tcp"}
+    - {port: "53", comment: "ALLOW DNS port", protocol: "udp"}
+    - {port: "67", comment: "ALLOW DHCP port", protocol: "udp"}
+    - {port: "443", comment: "ALLOW HTTPS port", protocol: "tcp"}
+  notify: Reload ufw
+
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

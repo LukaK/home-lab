@@ -1,0 +1,84 @@
+---
+
+- name: Ensure ca server is configured
+  hosts: ca.lab
+  become: true
+  roles:
+    - role: core
+    - role: update
+    - role: sshd
+    - role: vm_guest
+    - role: firewall
+  tasks:
+
+    - name: Create ssl directories
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: directory
+        owner: "root"
+        group: "root"
+        mode: "{{ item.mode }}"
+      loop:
+        - { path: "/ca/private", mode: '0700' }
+        - { path: "/ca/certs", mode: '0755'}
+        - { path: "/ca/newcerts", mode: '0755'}
+        - { path: "/ca/csr", mode: '0755'}
+
+
+    - name: Generate an OpenSSL private key
+      community.crypto.openssl_privatekey:
+        path: /ca/private/root-ca.key
+        size: 4096
+        passphrase: "{{ root_ca_pass }}"
+        cipher: auto
+
+
+    - name: Generate an openssl csr
+      community.crypto.openssl_csr:
+        path: /ca/csr/root-ca.csr
+        privatekey_path: /ca/private/root-ca.key
+        privatekey_passphrase: "{{ root_ca_pass }}"
+        common_name: Ansible CA
+        basic_constraints:
+          - 'CA:TRUE'
+        basic_constraints_critical: true
+        key_usage:
+          - keyCertSign
+        key_usage_critical: true
+
+
+    - name: Generate a Self Signed OpenSSL certificate
+      community.crypto.x509_certificate:
+        path: /ca/certs/root-ca.crt
+        privatekey_path: /ca/private/root-ca.key
+        privatekey_passphrase: "{{ root_ca_pass }}"
+        csr_path: /ca/csr/root-ca.csr
+        provider: selfsigned
+        selfsigned_not_after: "+36500d"
+
+
+    - name: Generate an OpenSSL private key
+      community.crypto.openssl_privatekey:
+        path: "/ca/private/{{ item.hostname }}.key"
+        size: 2048
+      loop: "{{ ssl_configuration }}"
+
+
+    - name: Generate an openssl csr
+      community.crypto.openssl_csr:
+        path: "/ca/csr/{{ item.hostname }}.csr"
+        privatekey_path: /ca/private/{{ item.hostname }}.key
+        subject_alt_name: "{{ item.subject_alt_name }}"
+      loop: "{{ ssl_configuration }}"
+
+
+    - name: Generate a Self Signed OpenSSL certificate
+      community.crypto.x509_certificate:
+        path: /ca/certs/{{ item.hostname }}.crt
+        csr_path: /ca/csr/{{ item.hostname }}.csr
+        provider: ownca
+        ownca_path: /ca/certs/root-ca.crt
+        ownca_privatekey_path: /ca/private/root-ca.key
+        ownca_privatekey_passphrase: "{{ root_ca_pass }}"
+        ownca_not_after: "+36500d"
+      loop: "{{ ssl_configuration }}"

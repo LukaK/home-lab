@@ -1,0 +1,75 @@
+---
+- name: Restart acpid
+  ansible.builtin.service:
+    name: acpid
+    state: restarted
+
+
+- name: Restart network manager
+  ansible.builtin.service:
+    name: NetworkManager
+    state: restarted
+
+
+- name: Restart cups
+  ansible.builtin.service:
+    name: cups
+    state: restarted
+
+
+- name: Restart bluetooth
+  ansible.builtin.service:
+    name: bluetooth
+    state: restarted
+
+
+- name: Restart libvirtd
+  ansible.builtin.service:
+    name: libvirtd
+    state: restarted
+
+
+- name: Restart lightdm
+  ansible.builtin.service:
+    name: lightdm
+    state: restarted
+
+
+- name: Restart zramd
+  ansible.builtin.service:
+    name: zramd
+    state: restarted
+
+
+- name: Restart snapd
+  ansible.builtin.service:
+    name: snapd
+    state: restarted
+
+
+- name: Restart avahi
+  ansible.builtin.service:
+    name: avahi-daemon
+    state: restarted
+
+
+- name: Reload transmission
+  ansible.builtin.service:
+    name: transmission
+    state: reloaded
+
+- name: Update trusted certificates
+  ansible.builtin.command:
+    cmd: 'update-ca-trust'
+
+
+# NOTE: Uncomment fail condition when issue with exit codes is fixed
+- name: Build initramd
+  ansible.builtin.command: /usr/bin/mkinitcpio -p linux
+  changed_when: true
+  # failed_when: mkinitcpio_result.rc != 0
+  failed_when: false
+
+
+- name: Reboot the system
+  ansible.builtin.reboot:

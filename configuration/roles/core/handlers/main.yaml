@@ -1,0 +1,9 @@
+---
+
+- name: Reboot the system
+  ansible.builtin.reboot:
+
+
+- name: Reload ufw
+  community.general.ufw:
+    state: reloaded

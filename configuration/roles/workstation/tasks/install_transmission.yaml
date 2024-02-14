@@ -1,0 +1,39 @@
+---
+
+- name: Install transmission
+  community.general.pacman:
+    state: present
+    name:
+      - transmission-gtk
+      - transmission-cli
+
+
+- name: Start transmission daemon
+  ansible.builtin.service:
+    name: transmission
+    state: started
+    enabled: true
+
+- name: Create torrent directory if it does not exist
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+    mode: '0775'
+  loop:
+    - { path: "/mnt/data", owner: "root", group: "root" }
+    - { path: "/mnt/data/torrents/Complete", owner: "transmission", group: "transmission" }
+    - { path: "/mnt/data/torrents/Incomplete", owner: "transmission", group: "transmission" }
+
+- name: Update transmission configuration
+  ansible.builtin.lineinfile:
+    path: /var/lib/transmission/.config/transmission-daemon/settings.json
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    backrefs: true
+  loop:
+    - { regexp: '^(.*"incomplete-dir-enabled":) false,$', line: '\1 true,' }
+    - { regexp: '^(.*"incomplete-dir":) .*$', line: '\1 "/mnt/data/torrents/Incomplete",' }
+    - { regexp: '^(.*"download-dir":) .*$', line: '\1 "/mnt/data/torrents/Complete",' }
+  notify: Reload transmission

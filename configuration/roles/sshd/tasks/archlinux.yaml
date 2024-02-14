@@ -1,0 +1,9 @@
+---
+
+- name: Install openssh server
+  community.general.pacman:
+    state: present
+    update_cache: true
+    name:
+      - openssh
+      - sshpass

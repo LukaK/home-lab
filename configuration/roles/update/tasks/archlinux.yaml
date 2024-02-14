@@ -1,0 +1,32 @@
+---
+
+- name: Update cache
+  community.general.pacman:
+    update_cache: true
+
+- name: Upgrade linux kernel
+  community.general.pacman:
+    state: latest
+    name:
+      - linux-headers
+  notify: Reboot
+
+- name: Upgrade pacman packages
+  community.general.pacman:
+    update_cache: true
+    upgrade: true
+
+- name: Update paru packages
+  block:
+    - name: Atempt to upgrade paru packages
+      become: true
+      become_user: ansible
+      kewlfft.aur.aur:
+        use: paru
+        update_cache: true
+        upgrade: true
+
+  rescue:
+    - name: Notify that paru is not installed
+      ansible.builtin.debug:
+        msg: Paru is not installed

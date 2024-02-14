@@ -1,0 +1,145 @@
+---
+- name: Install system packages
+  community.general.pacman:
+    state: present
+    update_cache: true
+    name:
+      - base-devel
+      - linux-headers
+      - inetutils
+      - efibootmgr
+      - xdg-user-dirs
+      - xdg-utils
+      - alsa-utils
+      - pipewire
+      - pipewire-alsa
+      - pipewire-pulse
+      - pipewire-jack
+      - sof-firmware
+      - mtools
+      - dosfstools
+      - nfs-utils
+      - ntfs-3g
+      - gvfs
+      - gvfs-smb
+      - acpi
+      - acpi_call
+      - acpid
+      - bash-completion
+      - os-prober
+      - reflector
+      - pacman-contrib
+  notify: Restart acpid
+
+
+- name: Start acpid
+  ansible.builtin.service:
+    name: acpid
+    state: started
+    enabled: true
+
+
+- name: Start reflector
+  ansible.builtin.service:
+    name: reflector.timer
+    state: started
+    enabled: true
+
+
+- name: Start fstrim
+  ansible.builtin.service:
+    name: fstrim.timer
+    state: started
+    enabled: true
+
+
+- name: Install network tools
+  community.general.pacman:
+    state: present
+    update_cache: true
+    name:
+      - dnsutils
+      - nmap
+      - ipset
+      - net-tools
+      - networkmanager
+      - network-manager-applet
+      - dialog
+      - wpa_supplicant
+  notify: Restart network manager
+
+
+- name: Start network manager
+  ansible.builtin.service:
+    name: NetworkManager
+    state: started
+    enabled: true
+
+
+- name: Install bluetooth
+  community.general.pacman:
+    state: present
+    update_cache: true
+    name:
+      - bluez
+      - bluez-utils
+  notify:
+    - Restart bluetooth
+
+
+- name: Start bluetooth
+  ansible.builtin.service:
+    name: bluetooth
+    state: started
+    enabled: true
+
+
+# NOTE: Remove rsync and rclone when you setup backup on another server
+- name: Install common utilities
+  community.general.pacman:
+    state: present
+    update_cache: true
+    name:
+      - zip
+      - unzip
+      - pdftk
+      - ctags
+      - flatpak
+      - rsync
+      - rclone
+      - ansible
+
+
+- name: Install fonts
+  community.general.pacman:
+    state: present
+    name:
+      - terminus-font
+
+
+# TODO: Fix conflicting packages
+- name: Install virtualization tools
+  community.general.pacman:
+    state: present
+    update_cache: true
+    name:
+      - virt-manager
+      - qemu-full
+      - edk2-ovmf
+      - bridge-utils
+      - dnsmasq
+      - dmidecode
+      - openbsd-netcat
+      # - iptables-nft
+      - vde2
+  notify: Restart libvirtd
+
+
+- name: Start virtualization daemon
+  ansible.builtin.service:
+    name: libvirtd
+    enabled: true
+
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

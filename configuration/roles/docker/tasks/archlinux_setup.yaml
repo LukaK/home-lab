@@ -1,0 +1,14 @@
+---
+
+- name: Ensure system packages for docker are installed
+  ansible.builtin.package:
+    name:
+      - docker
+      - docker-compose
+    state: present
+
+- name: Enable docker service
+  ansible.builtin.service:
+    name: docker.service
+    state: started
+    enabled: true

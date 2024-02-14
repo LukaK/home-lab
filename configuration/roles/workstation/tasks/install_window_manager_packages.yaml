@@ -1,0 +1,287 @@
+---
+
+- name: Install development tools
+  community.general.pacman:
+    state: present
+    name:
+      - python-pyqt5
+      - clang
+      - git
+      - alacritty
+      - zsh
+      - zsh-completions
+      - zsh-syntax-highlighting
+      - fzf
+      - python-neovim
+      - wl-clipboard
+      - pyenv
+      - neovim
+      - jenv
+      - nodejs
+      - npm
+      - ruby
+      - python-virtualenvwrapper
+      - jdk-openjdk
+      - python-pynvim
+      - python-poetry
+      - ollama
+        # go development environment
+      - go
+      - goreleaser  # release automation tool
+      - ko          # for building images
+      - yaegi       # interpreter
+      - revive      # linter
+
+
+- name: Start ollama
+  ansible.builtin.service:
+    name: ollama
+    state: started
+    enabled: true
+
+
+- name: Install aur development tools
+  kewlfft.aur.aur:
+    use: paru
+    state: present
+    name:
+      - git-remote-codecommit
+      - pyenv-virtualenv
+      - aws-sam-cli-bin
+      - siji-git
+  become: true
+  become_user: ansible
+
+
+- name: Install window manager packages
+  community.general.pacman:
+    state: present
+    name:
+      - papirus-icon-theme
+      - ttf-dejavu
+      - ttf-liberation
+      - ttf-font-awesome
+      - ttf-ubuntu-font-family
+      - ttf-droid
+      - ttf-sourcecodepro-nerd
+      - xorg-fonts-misc
+      - awesome-terminal-fonts
+      - noto-fonts
+      - materia-gtk-theme
+      - xorg
+      - xfce4-terminal
+      - dex
+      - i3
+      - i3lock
+      - polybar
+      - tk
+      - lxappearance
+      - arandr
+      - picom
+      - nitrogen
+
+
+- name: Install lightdm
+  community.general.pacman:
+    state: present
+    name:
+      - lightdm
+      - lightdm-gtk-greeter
+      - lightdm-gtk-greeter-settings
+  notify: Restart lightdm
+
+
+- name: Start lightdm
+  ansible.builtin.service:
+    name: lightdm
+    state: started
+    enabled: true
+
+
+- name: Install aur window manager packages
+  kewlfft.aur.aur:
+    use: paru
+    state: present
+    name:
+      - ttf-unifont
+  become: true
+  become_user: ansible
+
+
+- name: Install common tools
+  community.general.pacman:
+    state: present
+    name:
+      - xclip
+      - xsel
+      - stow
+      - htop
+      - wget
+      - ripgrep
+      - fd
+      - zathura
+      - zathura-djvu
+      - zathura-ps
+      - zathura-cb
+      - zathura-pdf-mupdf
+      - feh
+      - hunspell
+      - hunspell-en_us
+
+
+# TODO: Fix hunspell-hr
+- name: Install aur common tools
+  kewlfft.aur.aur:
+    use: paru
+    state: present
+    name:
+      - zramd
+      - snapd
+      # - hunspell-hr
+  become: true
+  become_user: ansible
+  notify:
+    - Restart zramd
+    - Restart snapd
+
+
+- name: Start zramd
+  ansible.builtin.service:
+    name: zramd
+    state: started
+    enabled: true
+
+
+- name: Start snapd
+  ansible.builtin.service:
+    name: snapd.socket
+    state: started
+    enabled: true
+
+
+- name: Link snap
+  ansible.builtin.file:
+    src: "/var/lib/snapd/snap"
+    dest: "/snap"
+    state: link
+
+
+- name: Install applications
+  community.general.pacman:
+    state: present
+    name:
+      - keepassxc
+      - vlc
+      - thunderbird
+      - libreoffice
+      - flameshot
+      - newsboat
+      - thunar
+      - thunar-volman
+      - pcmanfm
+      - rofi
+      - skanlite
+      - pavucontrol
+      - udisks2
+      - udiskie
+      - blueman
+
+- name: Install aur applications
+  kewlfft.aur.aur:
+    use: paru
+    state: present
+    name:
+      - simplescreenrecorder
+      - google-chrome
+      - viber
+      - dropbox
+      - zoom
+      - slack-desktop
+      - anki-bin
+  become: true
+  become_user: ansible
+
+
+- name: Install snap applications
+  community.general.snap:
+    name:
+      - obsidian
+    classic: true
+
+
+- name: Check if nordic theme is installed
+  ansible.builtin.stat:
+    path: /usr/share/themes/NordArc-Theme
+  register: theme_stat
+
+
+- name: Check if nordic icons is installed
+  ansible.builtin.stat:
+    path: /usr/share/icons/NordArc-Icons
+  register: icons_stat
+
+
+- name: Install nordic theme
+  when: not theme_stat.stat.exists or not icons_stat.stat.exists
+  block:
+
+    - name: Pull nord theme for lxappearance
+      ansible.builtin.git:
+        repo: 'https://github.com/robertovernina/NordArc.git'
+        dest: /tmp/nordarc
+        single_branch: true
+        depth: 1
+        force: true
+
+    - name: Copy nord arct theme
+      ansible.builtin.copy:
+        remote_src: true
+        src: /tmp/nordarc/NordArc-Theme
+        dest: /usr/share/themes
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name: Copy nord arct icons
+      ansible.builtin.copy:
+        remote_src: true
+        src: /tmp/nordarc/NordArc-Icons
+        dest: /usr/share/icons
+        mode: '0755'
+        owner: root
+        group: root
+
+
+- name: Create wallpapers directory if it does not exist
+  ansible.builtin.file:
+    path: /usr/share/backgrounds
+    state: directory
+    owner: root
+    group: root
+    mode: '0775'
+
+- name: Copy wallpapers to wallpapers directory
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: /usr/share/backgrounds/
+    owner: root
+    group: root
+    mode: '0755'
+  loop:
+    - cave.jpg
+    - starry-sky.jpg
+
+
+- name: Setup lightdm
+  blockinfile:
+    path: /etc/lightdm/lightdm-gtk-greeter.conf
+    block: |
+      [greeter]
+      theme-name = NordArc-Theme
+      icon-theme-name = NordArc-Icons
+      background = /usr/share/backgrounds/starry-sky.jpg
+  notify: Restart lightdm
+
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

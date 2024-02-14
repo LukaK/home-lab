@@ -1,0 +1,6 @@
+---
+
+- name: Restart qemu agent
+  ansible.builtin.service:
+    name: qemu-guest-agent
+    state: restarted

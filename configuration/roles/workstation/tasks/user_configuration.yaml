@@ -1,0 +1,127 @@
+---
+
+- name: Add user
+  ansible.builtin.user:
+    name: "{{ user.user_name }}"
+    groups: libvirt,wheel,docker,transmission
+    append: true
+    password: "{{ user.password | password_hash }}"
+    state: present
+    update_password: on_create
+    shell: /usr/bin/zsh
+
+
+- name: Add user to sudo
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers.d/{{ user.user_name }}
+    create: true
+    owner: root
+    group: root
+    mode: '0440'
+    line: "{{ user.user_name }} ALL=(ALL) ALL"
+  when: user.admin
+
+
+- name: Check if rofi themes are installed
+  become: true
+  become_user: "{{ user.user_name }}"
+  ansible.builtin.stat:
+    path: ~/.local/share/rofi
+  register: rofi_stat
+
+
+- name: Create a directory if it does not exist
+  become: true
+  become_user: "{{ user.user_name }}"
+  ansible.builtin.file:
+    path: ~/.local/share
+    state: directory
+    mode: '0751'
+
+- name: Pull rofi themes
+  become: true
+  become_user: "{{ user.user_name }}"
+  ansible.builtin.git:
+    repo: 'https://github.com/newmanls/rofi-themes-collection.git'
+    dest: ~/.local/share/rofi
+    depth: 1
+    update: true
+
+
+- name: Clone oh-my-zsh git repository to user's home folder
+  become: true
+  become_user: "{{ user.user_name }}"
+  ansible.builtin.git:
+    repo: https://github.com/ohmyzsh/ohmyzsh.git
+    dest: ~/.oh-my-zsh
+    depth: 1
+    update: true
+
+- name: Install oh-my-zsh extensions
+  become: true
+  become_user: "{{ user.user_name }}"
+  ansible.builtin.git:
+    repo: "{{ item.repo }}"
+    dest: "{{ item.dest }}"
+    depth: 1
+    update: true
+  loop:
+    - {repo: https://github.com/romkatv/powerlevel10k.git, dest: ~/.oh-my-zsh/custom/themes/powerlevel10k}
+    - {repo: https://github.com/zsh-users/zsh-syntax-highlighting.git, dest: ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting}
+
+
+- name: Install pyenv-virtualenvwrapper
+  become: true
+  become_user: "{{ user.user_name }}"
+  ansible.builtin.git:
+    repo: https://github.com/pyenv/pyenv-virtualenvwrapper.git
+    dest: ~/.pyenv/plugins/pyenv-virtualenvwrapper
+    depth: 1
+    update: true
+
+
+- name: Clone neovim configuraiton
+  become: true
+  become_user: "{{ user.user_name }}"
+  ansible.builtin.git:
+    repo: https://github.com/LukaK/spacecow
+    dest: ~/.config/nvim
+    update: true
+    force: true
+
+
+# NOTE: Remove recursive when you remove submodules from dotfiles
+- name: Clone dotfiles
+  become: true
+  become_user: "{{ user.user_name }}"
+  ansible.builtin.git:
+    repo: https://github.com/LukaK/dotfiles
+    dest: ~/dotfiles
+    recursive: false
+    update: true
+    force: true
+
+- name: Stow configuraiton files
+  become: true
+  become_user: "{{ user.user_name }}"
+  ansible.builtin.shell:
+    cmd: "stow --dotfiles --verbose=2 --target {{ item.target }} {{ item.package }}"
+    chdir: ~/dotfiles
+  register: stow_result
+  changed_when: 'stow_result.stderr is search("LINK: ")'
+  loop:
+    - { target: "~/.config", package: "config" }
+    - { target: "~", package: "home" }
+
+
+# NOTE: Remove recursive when you remove submodules from dotfiles
+- name: Reset stow adoption
+  become: true
+  become_user: "{{ user.user_name }}"
+  ansible.builtin.git:
+    repo: https://github.com/LukaK/dotfiles
+    dest: ~/dotfiles
+    force: true
+    update: true
+    recursive: false
+  when: stow_result is changed

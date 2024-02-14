@@ -1,0 +1,14 @@
+---
+
+- name: Ensure workstation is configured
+  hosts: workstations
+  become: true
+  roles:
+    - role: core
+    - role: update
+    - role: sshd
+    - role: firewall
+    - role: docker
+    - role: workstation
+      root_password: "{{ workstation_root_pass }}"
+      users: "{{ workstation_users }}"

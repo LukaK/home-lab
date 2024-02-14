@@ -1,0 +1,12 @@
+---
+
+- name: Ensure docker is installed
+  ansible.builtin.include_tasks:
+    file: "{{ ansible_facts['distribution'] | lower }}_setup.yaml"
+
+
+- name: Ensure ansible user is in docker group
+  ansible.builtin.user:
+    name: ansible
+    append: true
+    groups: docker

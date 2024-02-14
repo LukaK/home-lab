@@ -1,0 +1,43 @@
+---
+
+
+- name: Change root password
+  ansible.builtin.user:
+    name: root
+    password: "{{ root_password | password_hash }}"
+    state: present
+    update_password: on_create
+
+- name: Include instalation of core packages
+  ansible.builtin.include_tasks: install_core_packages.yaml
+
+- name: Install paru package
+  kewlfft.aur.aur:
+    use: auto
+    state: present
+    name:
+      - paru
+  become: true
+  become_user: ansible
+
+- name: Include nvidia drivers
+  ansible.builtin.include_tasks: install_nvidia_drivers.yaml
+  when: install_nvidia_driver
+
+- name: Install cups
+  ansible.builtin.include_tasks: install_cups.yaml
+
+- name: Include window manager tasks
+  ansible.builtin.include_tasks: install_window_manager_packages.yaml
+
+- name: Include transmission
+  ansible.builtin.include_tasks: install_transmission.yaml
+
+- name: Include installation of root certificate
+  ansible.builtin.include_tasks: install_root_certificate.yaml
+
+- name: Configure user
+  ansible.builtin.include_tasks: user_configuration.yaml
+  loop: "{{ users }}"
+  loop_control:
+    loop_var: user

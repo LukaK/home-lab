@@ -1,0 +1,37 @@
+---
+
+- name: Install core packages
+  ansible.builtin.package:
+    name:
+      - ufw
+    state: present
+
+
+- name: Start firewall service
+  ansible.builtin.service:
+    name: ufw
+    state: started
+    enabled: true
+
+
+- name: Allow ssh connection
+  community.general.ufw:
+    rule: limit
+    port: ssh
+    proto: tcp
+    comment: "Allow ssh port"
+  notify: Reload ufw
+
+
+- name: Deny all other incomming trafic
+  community.general.ufw:
+    rule: deny
+    direction: in
+    log: true
+    state: enabled
+    comment: "Default DENY incomming traffic"
+  notify: Reload ufw
+
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

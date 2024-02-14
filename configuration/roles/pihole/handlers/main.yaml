@@ -1,0 +1,24 @@
+---
+
+- name: Restart resolved
+  ansible.builtin.service:
+    name: systemd-resolved
+    state: restarted
+  listen: restart systemd-resolved
+
+- name: Restart docker
+  ansible.builtin.service:
+    name: docker
+    state: restarted
+  listen: restart systemd-resolved
+
+- name: Reload ufw
+  community.general.ufw:
+    state: reloaded
+
+- name: Restart pihole container
+  community.docker.docker_container:
+    name: pihole
+    image: "{{ pihole_image }}"
+    state: started
+    restart: true
