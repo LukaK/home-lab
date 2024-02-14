@@ -14,5 +14,7 @@
     - role: firewall
     - role: docker
     - role: workstation
-      root_password: "{{ root_pass }}"
-      users: "{{ users_config }}"
+      root_password: "{{ i_root_pass }}"
+      users: "{{ i_user_configs }}"
+      install_nvidia_driver: "{{ i_install_nvidia_driver }}"
+      root_ca_cert: "{{ i_root_ca_cert }}"
