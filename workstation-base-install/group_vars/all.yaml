@@ -2,4 +2,16 @@
 hostname: workstation
 timezone: Europe/Zagreb
 locale_list: ["en_US.UTF-8", "hr_HR.UTF-8"]
-ansible_public_key_path: ".ssh/ansible/id_rsa.pub"
+ansible_public_key: >-
+  ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDLUk7qUA2RDk+
+  d2i8Vi58PmRZim8fXJARVSUu97hzV7041JcNotvBFzDMTShQgTF
+  JYVLJVlkMQPRW/s6mqigWW6tiQhldX2qO4cqeLhTGWHN933dBnn
+  pmDNcweX0DqjEHIm7/mSv+nLevbfQlGKnK7aC8YuR1GpcFBWnI9
+  YTO5cxFlhEpSCUbxGc/N4qcfYIheJNo7iq29FNAleSwiAmVqJ5Y
+  AjauPfyRNsWcbY1sDuPzVJOrNNm4eDCz1eFdL8ObvF8qfHO+JQm
+  YvUUo3BKL90EdJ/25lPIAPF7lvbcDBqAPvA1K5rxg/6xBjcKOsB
+  2NG5Sc26cYlCZlI4VefwlBnO+8XsCn7QsVeqw1xHO3pQmK9fab6
+  ZXjAdKX5rQ2pZQir/ldWz+KOsl5MzX7E8EuA4tTZPC22m7iHj7y
+  HnKk+lZbhuZ2tfFeZ+AAYbX5u78DeMF6aSuxvsSbc4G+L0Li4xb
+  n1Ua8jgZ8Lz3KQWx71l+JgZi0QVU4DITlEEV3c+Ss= luka@mob
+  ile-arch-personal
