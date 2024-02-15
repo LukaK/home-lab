@@ -31,6 +31,7 @@
       - ko          # for building images
       - yaegi       # interpreter
       - revive      # linter
+      - packer
 
 
 - name: Start ollama
