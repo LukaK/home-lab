@@ -87,7 +87,6 @@
     repo: https://github.com/LukaK/spacecow
     dest: ~/.config/nvim
     update: true
-    force: true
 
 
 # NOTE: Remove recursive when you remove submodules from dotfiles
