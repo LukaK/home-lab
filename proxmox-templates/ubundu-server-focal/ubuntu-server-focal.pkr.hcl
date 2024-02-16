@@ -28,20 +28,21 @@ source "proxmox-iso" "ubuntu-server-focal" {
 
     # VM General Settings
     node = "proxmox2"
-    vm_id = "201"
+    vm_id = "202"
     vm_name = "ubuntu-server-focal"
     template_description = "Ubuntu Server Focal Image"
 
     # VM OS Settings
     # (Option 1) Local ISO File
-    # iso_file = "local:iso/ubuntu-20.04.3-live-server-amd64.iso"
+    iso_file = "local:iso/ubuntu-20.04.3-live-server-amd64.iso"
 
     # - or -
     # (Option 2) Download ISO
-    iso_url = "http://lt.releases.ubuntu.com/20.04.3/ubuntu-20.04.3-live-server-amd64.iso"
-    iso_checksum = "f8e3086f3cea0fb3fefb29937ab5ed9d19e767079633960ccb50e76153effc98"
+    # iso_url = "http://lt.releases.ubuntu.com/20.04.3/ubuntu-20.04.3-live-server-amd64.iso"
+    # iso_checksum = "f8e3086f3cea0fb3fefb29937ab5ed9d19e767079633960ccb50e76153effc98"
 
-    iso_storage_pool = "local"
+    # iso_storage_pool = "local"
+    iso_storage_pool = "lvm-shared"
     unmount_iso = true
 
     # VM System Settings
@@ -90,9 +91,9 @@ source "proxmox-iso" "ubuntu-server-focal" {
     # PACKER Autoinstall Settings
     http_directory = "http"
     # (Optional) Bind IP Address and Port
-    # http_bind_address = "0.0.0.0"
-    # http_port_min = 8802
-    # http_port_max = 8802
+    http_bind_address = "0.0.0.0"
+    http_port_min = 8802
+    http_port_max = 8802
 
     ssh_username = "ansible"
 

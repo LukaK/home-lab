@@ -36,6 +36,9 @@
 - name: Include installation of root certificate
   ansible.builtin.include_tasks: root_certificate.yaml
 
+- name: Include packer
+  ansible.builtin.include_tasks: packer.yaml
+
 - name: Configure users
   ansible.builtin.include_tasks: users.yaml
   loop: "{{ users }}"

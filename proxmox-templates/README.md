@@ -4,6 +4,7 @@ Using packer to create vm templates for home lab.
 
 Requirements:
 - packer
+- open firewall port ( 8802 ) for reverse connection from vm
 
 How to create a proxmox token:
 1. proxmox -> data center -> permissions -> api tokens
