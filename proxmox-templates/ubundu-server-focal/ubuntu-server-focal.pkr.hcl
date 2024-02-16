@@ -2,6 +2,16 @@
 # ---
 # Packer Template to create an Ubuntu Server (Focal) on Proxmox
 
+packer {
+  required_plugins {
+    proxmox-iso = {
+       version = ">= 1.1.7"
+      source = "github.com/hashicorp/proxmox"
+    }
+  }
+}
+
+
 # Variable Definitions
 variable "proxmox_api_url" {
     type = string
