@@ -17,18 +17,18 @@ variable "proxmox_api_token_secret" {
 }
 
 # Resource Definiation for the VM Template
-source "proxmox" "ubuntu-server-focal" {
+source "proxmox-iso" "ubuntu-server-focal" {
 
     # Proxmox Connection Settings
     proxmox_url = "${var.proxmox_api_url}"
     username = "${var.proxmox_api_token_id}"
     token = "${var.proxmox_api_token_secret}"
     # (Optional) Skip TLS Verification
-    # insecure_skip_tls_verify = true
+    insecure_skip_tls_verify = true
 
     # VM General Settings
-    node = "your-proxmox-node"
-    vm_id = "100"
+    node = "proxmox1"
+    vm_id = "200"
     vm_name = "ubuntu-server-focal"
     template_description = "Ubuntu Server Focal Image"
 
@@ -39,6 +39,9 @@ source "proxmox" "ubuntu-server-focal" {
     # (Option 2) Download ISO
     # iso_url = "https://releases.ubuntu.com/20.04/ubuntu-20.04.3-live-server-amd64.iso"
     # iso_checksum = "f8e3086f3cea0fb3fefb29937ab5ed9d19e767079633960ccb50e76153effc98"
+    iso_url = "https://www.releases.ubuntu.com/focal/ubuntu-20.04.6-live-server-amd64.iso"
+    iso_checksum = "b8f31413336b9393ad5d8ef0282717b2ab19f007df2e9ed5196c13d8f9153c8b"
+
     iso_storage_pool = "local"
     unmount_iso = true
 
@@ -50,9 +53,9 @@ source "proxmox" "ubuntu-server-focal" {
 
     disks {
         disk_size = "20G"
-        format = "qcow2"
+        # format = "qcow2"
+        format = "raw"
         storage_pool = "local-lvm"
-        storage_pool_type = "lvm"
         type = "virtio"
     }
 
@@ -91,13 +94,13 @@ source "proxmox" "ubuntu-server-focal" {
     # http_port_min = 8802
     # http_port_max = 8802
 
-    ssh_username = "your-user-name"
+    ssh_username = "ansible"
 
     # (Option 1) Add your Password here
     # ssh_password = "your-password"
     # - or -
     # (Option 2) Add your Private SSH KEY file here
-    # ssh_private_key_file = "~/.ssh/id_rsa"
+    ssh_private_key_file = "~/.ssh/ansible/id_rsa"
 
     # Raise the timeout, when installation takes longer
     ssh_timeout = "20m"
@@ -107,7 +110,7 @@ source "proxmox" "ubuntu-server-focal" {
 build {
 
     name = "ubuntu-server-focal"
-    sources = ["source.proxmox.ubuntu-server-focal"]
+    sources = ["source.proxmox-iso.ubuntu-server-focal"]
 
     # Provisioning the VM Template for Cloud-Init Integration in Proxmox #1
     provisioner "shell" {
