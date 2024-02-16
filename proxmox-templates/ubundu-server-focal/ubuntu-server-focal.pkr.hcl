@@ -27,20 +27,19 @@ source "proxmox-iso" "ubuntu-server-focal" {
     insecure_skip_tls_verify = true
 
     # VM General Settings
-    node = "proxmox1"
-    vm_id = "200"
+    node = "proxmox2"
+    vm_id = "201"
     vm_name = "ubuntu-server-focal"
     template_description = "Ubuntu Server Focal Image"
 
     # VM OS Settings
     # (Option 1) Local ISO File
-    # iso_file = "local:iso/ubuntu-20.04.2-live-server-amd64.iso"
+    # iso_file = "local:iso/ubuntu-20.04.3-live-server-amd64.iso"
+
     # - or -
     # (Option 2) Download ISO
-    # iso_url = "https://releases.ubuntu.com/20.04/ubuntu-20.04.3-live-server-amd64.iso"
-    # iso_checksum = "f8e3086f3cea0fb3fefb29937ab5ed9d19e767079633960ccb50e76153effc98"
-    iso_url = "https://www.releases.ubuntu.com/focal/ubuntu-20.04.6-live-server-amd64.iso"
-    iso_checksum = "b8f31413336b9393ad5d8ef0282717b2ab19f007df2e9ed5196c13d8f9153c8b"
+    iso_url = "http://lt.releases.ubuntu.com/20.04.3/ubuntu-20.04.3-live-server-amd64.iso"
+    iso_checksum = "f8e3086f3cea0fb3fefb29937ab5ed9d19e767079633960ccb50e76153effc98"
 
     iso_storage_pool = "local"
     unmount_iso = true
@@ -70,6 +69,7 @@ source "proxmox-iso" "ubuntu-server-focal" {
         model = "virtio"
         bridge = "vmbr0"
         firewall = "false"
+        vlan_tag = "10"
     }
 
     # VM Cloud-Init Settings
