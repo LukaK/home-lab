@@ -89,7 +89,7 @@
     update: true
 
 
-# NOTE: Remove recursive when you remove submodules from dotfiles
+# TODO: Remove recursive and force when you remove submodules from dotfiles
 - name: Clone dotfiles
   become: true
   become_user: "{{ user.user_name }}"
