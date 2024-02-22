@@ -25,6 +25,7 @@
       - python-pynvim
       - python-poetry
       - ollama
+      - jupyterlab
         # go development environment
       - go
       - goreleaser  # release automation tool
