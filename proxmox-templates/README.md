@@ -15,8 +15,11 @@ How to create a proxmox token:
 ```
 # populate credentials.pkr.hcl
 
-# validate the template
+# install packer dependencies
 pushd ubuntu-server-focal
+packer init ubuntu-server-focal.pkr.hcl
+
+# validate the template
 packer validate --var-file=../credentials.pkr.hcl ubuntu-server-focal.pkr.hcl
 
 # build image
