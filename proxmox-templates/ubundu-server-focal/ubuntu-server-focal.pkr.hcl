@@ -38,7 +38,7 @@ source "proxmox-iso" "ubuntu-server-focal" {
 
     # VM General Settings
     node = "proxmox2"
-    vm_id = "202"
+    vm_id = "201"
     vm_name = "ubuntu-server-focal"
     template_description = "Ubuntu Server Focal Image"
 
