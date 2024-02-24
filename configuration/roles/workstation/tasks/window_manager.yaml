@@ -22,6 +22,7 @@
       - ruby
       - python-virtualenvwrapper
       - jdk-openjdk
+      - terraform
       - python-pynvim
       - python-poetry
       - ollama
