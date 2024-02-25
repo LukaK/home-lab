@@ -10,8 +10,9 @@
   community.general.ufw:
     insert: 1
     rule: allow
-    port: 8802
-    comment: "Allow packer port"
+    port: 8000:9000
+    proto: tcp
+    comment: "Allow packer ports"
   notify: Reload ufw
 
 - name: Flush handlers
