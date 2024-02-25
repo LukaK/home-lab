@@ -1,14 +1,14 @@
-resource "proxmox_vm_qemu" "srv-prod-1" {
-    name = "test-server-1"
-    desc = "test server"
+# TODO: terraform provider issues find a fix
+resource "proxmox_vm_qemu" "k8-ctrl" {
+    count = 3
+
+    name = "k8-ctrl-${count.index + 1}"
+    desc = "Kubernetes controll node"
     # agent = 1
-    target_node = "proxmox2"
+    target_node = "proxmox${count.index + 1}"
     tags = "k8-control"
 
-    # define_connection_info = false
-
-    # -- only important for full clone
-    vmid = 20002
+    vmid = tonumber("1${count.index + 1}02")
     clone = "ubuntu-server-focal"
     full_clone = true
 
@@ -23,10 +23,10 @@ resource "proxmox_vm_qemu" "srv-prod-1" {
     #     tag    = 10
     # }
 
+    # TODO: Should this match image definition
     # scsihw = "virtio-scsi-pci"  # default virtio-scsi-pci
-
     # disk {
-    #     storage = "pv1"
+    #     storage = "local-lvm"
     #     type = "virtio"
     #     size = "40G"
     #     iothread = 1
@@ -40,9 +40,10 @@ resource "proxmox_vm_qemu" "srv-prod-1" {
     #    ]
     #}
 
+    # TODO: Select subset of cloud-init options that you need
     # Cloud Init Settings
     # ipconfig0 = "ip=10.20.0.2/16,gw=10.20.0.1"
-    # nameserver = "10.20.0.1"
+    # nameserver = "10.0.10.94"
     # ciuser = "xcad"
     # sshkeys = var.PUBLIC_SSH_KEY
 }
