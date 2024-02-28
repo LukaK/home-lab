@@ -4,8 +4,6 @@
   ansible.builtin.user:
     name: ansible
     password_lock: true
-    groups: wheel
-    append: true
     state: present
 
 
