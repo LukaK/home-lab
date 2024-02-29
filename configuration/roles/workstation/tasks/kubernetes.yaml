@@ -1,0 +1,8 @@
+---
+
+
+- name: Install kubernetes packages
+  community.general.pacman:
+    state: present
+    name:
+      - kubectl

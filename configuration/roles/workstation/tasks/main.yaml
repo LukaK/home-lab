@@ -42,6 +42,9 @@
 - name: Include ansible
   ansible.builtin.include_tasks: ansible.yaml
 
+- name: Include kubernetes
+  ansible.builtin.include_tasks: kubernetes.yaml
+
 - name: Configure users
   ansible.builtin.include_tasks: users.yaml
   loop: "{{ users }}"
