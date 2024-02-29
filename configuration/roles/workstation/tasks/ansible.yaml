@@ -1,0 +1,8 @@
+---
+
+- name: Install ansible packages
+  community.general.pacman:
+    state: present
+    name:
+      - ansible
+      - python-netaddr
