@@ -8,6 +8,8 @@
       - nvidia
       - nvidia-utils
       - nvtop
+      - cuda
+      - python-pycuda
 
 - name: Install nvidia settings
   kewlfft.aur.aur:
