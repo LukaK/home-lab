@@ -1,0 +1,7 @@
+/*
+!.gitignore
+!.terraform.local.hcl
+!kubernetes.tf
+!providers.tf
+!README.md
+!variables.auto.tfvars.template
