@@ -7,6 +7,11 @@ terraform {
     #   source  = "telmate/proxmox"
     #   version = ">= 2.9.14"
     # }
+    # issues with original maintainer
+    proxmox = {
+      source  = "Terraform-for-Proxmox/proxmox"
+      version = ">= 0.0.1"
+    }
   }
 }
 

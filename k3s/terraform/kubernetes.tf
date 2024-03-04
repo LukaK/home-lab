@@ -1,14 +1,17 @@
-# TODO: terraform provider issues find a fix
+# TODO: add disc resizing
+# TODO: add worker nodes
+# TODO: add network configuration in cloud init
+# TODO: connect with ansible and configure working cluster from nothing
 resource "proxmox_vm_qemu" "k8-ctrl" {
     count = 3
 
     name = "k8-ctrl-${count.index + 1}"
     desc = "Kubernetes controll node"
-    # agent = 1
+    agent = 1
     target_node = "proxmox${count.index + 1}"
     tags = "k8-control"
 
-    vmid = tonumber("1${count.index + 1}02")
+    vmid = tonumber("1${count.index + 1}05")
     clone = "ubuntu-server-focal"
     full_clone = true
 
