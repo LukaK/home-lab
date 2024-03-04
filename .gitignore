@@ -1,5 +1,3 @@
-credentials.pkr.hcl
-
 # Local .terraform directories
 **/.terraform
 
