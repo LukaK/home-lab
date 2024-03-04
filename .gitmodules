@@ -2,5 +2,5 @@
 	path = configuration/inventory
 	url = git@github.com:LukaK/sute.git
 [submodule "kubernetes/ansible"]
-	path = kubernetes/ansible
+	path = k3s/ansible
 	url = https://github.com/techno-tim/k3s-ansible.git
