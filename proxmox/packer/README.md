@@ -1,4 +1,4 @@
-# proxmox templates
+# packer
 
 Using packer to create vm templates for home lab.
 
