@@ -1,4 +1,4 @@
-# proxmox ip address
+# proxmox ip address "https://proxmox.lab:8006/api2/json"
 proxmox_api_url = ""
 
 # api token id
