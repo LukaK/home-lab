@@ -11,6 +11,7 @@ resource "proxmox_vm_qemu" "k3s-ctrl" {
     vmid = tonumber("1${count.index + 1}05")
     clone = "ubuntu-server-focal"
     full_clone = true
+    onboot = true
 
     cores = 2
     sockets = 1
@@ -49,6 +50,7 @@ resource "proxmox_vm_qemu" "k3s-wrk" {
     vmid = tonumber("1${count.index + 1}06")
     clone = "ubuntu-server-focal"
     full_clone = true
+    onboot = true
 
     cores = 6
     sockets = 1
