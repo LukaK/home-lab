@@ -1,52 +1,84 @@
 # TODO: add disc resizing
-# TODO: add worker nodes
-# TODO: add network configuration in cloud init
-# TODO: connect with ansible and configure working cluster from nothing
-resource "proxmox_vm_qemu" "k8-ctrl" {
+resource "proxmox_vm_qemu" "k3s-ctrl" {
     count = 3
 
-    name = "k8-ctrl-${count.index + 1}"
-    desc = "Kubernetes controll node"
+    name = "k3s-control-${count.index + 1}"
+    desc = "k3s controll node"
     agent = 1
     target_node = "proxmox${count.index + 1}"
-    tags = "k8-control"
+    tags = "k3s;k3s-control"
 
     vmid = tonumber("1${count.index + 1}05")
     clone = "ubuntu-server-focal"
     full_clone = true
 
-    cores = 3
+    cores = 2
     sockets = 1
     cpu = "host"
     memory = 4000
 
-    # network {
-    #     bridge = "vmbr1"
-    #     model  = "virtio"
-    #     tag    = 10
-    # }
+    network {
+        bridge = "vmbr0"
+        model  = "virtio"
+        tag    = 10
+    }
 
-    # TODO: Should this match image definition
+    # -- lifecycle
+    lifecycle {
+        ignore_changes = [
+            disk,
+            vm_state
+        ]
+    }
+
+    # cloud init settings
+    ipconfig0 = "ip=10.0.10.${70 + count.index}/24,gw=10.0.10.1"
+    nameserver = "10.0.10.94"
+}
+
+
+resource "proxmox_vm_qemu" "k3s-wrk" {
+    count = 3
+
+    name = "k3s-worker-${count.index + 1}"
+    desc = "k3s worker node"
+    agent = 1
+    target_node = "proxmox${count.index + 1}"
+    tags = "k3s;k3s-worker"
+
+    vmid = tonumber("1${count.index + 1}06")
+    clone = "ubuntu-server-focal"
+    full_clone = true
+
+    cores = 6
+    sockets = 1
+    cpu = "host"
+    memory = 10000
+
+    network {
+        bridge = "vmbr0"
+        model  = "virtio"
+        tag    = 10
+    }
+
+    # NOTE: issues with disc resizing
     # scsihw = "virtio-scsi-pci"  # default virtio-scsi-pci
     # disk {
     #     storage = "local-lvm"
     #     type = "virtio"
-    #     size = "40G"
+    #     size = "20G"
     #     iothread = 1
     # }
 
     # -- lifecycle
-    # lifecycle {
-    #    ignore_changes = [
-    #        disk,
-    #        vm_state
-    #    ]
-    #}
+    lifecycle {
+        ignore_changes = [
+            disk,
+            vm_state
+        ]
+    }
 
-    # TODO: Select subset of cloud-init options that you need
-    # Cloud Init Settings
-    # ipconfig0 = "ip=10.20.0.2/16,gw=10.20.0.1"
-    # nameserver = "10.0.10.94"
-    # ciuser = "xcad"
-    # sshkeys = var.PUBLIC_SSH_KEY
+    # cloud init settings
+    ipconfig0 = "ip=10.0.10.${73 + count.index}/24,gw=10.0.10.1"
+    nameserver = "10.0.10.94"
 }
