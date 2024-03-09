@@ -1,0 +1,30 @@
+serviceWeb:
+  loadBalancerIP: 10.0.10.49
+  annotations:
+    metallb.universe.tf/allow-shared-ip: pihole-svc
+  type: LoadBalancer
+
+serviceDns:
+  loadBalancerIP: 10.0.10.49
+  annotations:
+    metallb.universe.tf/allow-shared-ip: pihole-svc
+  type: LoadBalancer
+
+podDnsConfig:
+  enabled: true
+  policy: "None"
+  nameservers:
+  - 127.0.0.1
+  - 1.1.1.1
+
+
+dnsmasq:
+  customDnsEntries:
+    - address=/test.lab/10.0.10.15
+
+adminPassword: test
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi

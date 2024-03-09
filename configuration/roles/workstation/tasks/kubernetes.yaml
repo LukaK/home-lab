@@ -6,3 +6,4 @@
     state: present
     name:
       - kubectl
+      - helm
