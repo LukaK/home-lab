@@ -1,12 +1,15 @@
 # services
 
-```
-# add the repo locally and update to pull the available charts
-helm repo add mojo2600 https://mojo2600.github.io/pihole-kubernetes/
-helm repo update
-```
+## pihole
 
-### TODO
-1. handle sensitive information
-2. setup halm dependencies
-3. fix pihole version
+repository: https://mojo2600.github.io/pihole-kubernetes/
+chart: pihole
+
+```
+# add repository
+helm repo add mojo2600 https://mojo2600.github.io/pihole-kubernetes/
+
+# install pihole chart
+helm install pihole mojo2600/pihole --values pi-hole-values.yaml
+
+```

@@ -28,3 +28,7 @@ resources:
   requests:
     cpu: 100m
     memory: 128Mi
+
+# persistentVolumeClaim:
+#   enabled: true
+#   size: 500 Mi
