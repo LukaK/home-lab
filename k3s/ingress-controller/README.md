@@ -26,6 +26,6 @@ helm install ingress-nginx ingress-nginx \
   --repo https://kubernetes.github.io/ingress-nginx \
   --version ${CHART_VERSION} \
   --namespace ingress-nginx \
-  --values nginx-values.yaml
+  --values ingress-nginx-values.yaml
 
 ```
