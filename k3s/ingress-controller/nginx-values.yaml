@@ -1,0 +1,4 @@
+---
+controller:
+  service:
+    loadBalancerIP: "10.0.10.41"
