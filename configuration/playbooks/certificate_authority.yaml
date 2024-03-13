@@ -61,6 +61,53 @@
         selfsigned_not_after: "+36500d"
 
 
+    # TODO: Move this to inventory and use loop below
+    - name: Generate an intermediate OpenSSL private key
+      community.crypto.openssl_privatekey:
+        path: /ca/private/intermediate-kubernetes-ca.key
+        size: 4096
+
+
+    - name: Generate an intermediate openssl csr
+      community.crypto.openssl_csr:
+        path: /ca/csr/intermediate-kubernetes-ca.csr
+        privatekey_path: /ca/private/intermediate-kubernetes-ca.key
+        common_name: Kubernetes CA
+        basic_constraints:
+          - 'CA:TRUE'
+        basic_constraints_critical: true
+        key_usage:
+          - keyCertSign
+        key_usage_critical: true
+
+
+    - name: Generate a intermediate Self Signed OpenSSL certificate
+      community.crypto.x509_certificate:
+        path: /ca/certs/intermediate-kubernetes-ca.crt
+        privatekey_path: /ca/private/intermediate-kubernetes-ca.key
+        csr_path: /ca/csr/intermediate-kubernetes-ca.csr
+        provider: ownca
+        ownca_path: /ca/certs/root-ca.crt
+        ownca_privatekey_path: /ca/private/root-ca.key
+        ownca_privatekey_passphrase: "{{ i_root_ca_pass }}"
+        ownca_not_after: "+36500d"
+
+    - name: Set chain certs for kubernetes
+      ansible.builtin.set_fact:
+        intermediate_kubernetes_ca_chain_files:
+            - /ca/certs/intermediate-kubernetes-ca.crt
+            - /ca/certs/root-ca.crt
+
+    - name: Read chain component certificates
+      command: awk 1 {{ intermediate_kubernetes_ca_chain_files | join(' ') }}
+      register: intermediate_kubernetes_ca_chain_contents
+
+    - name: Create kubernetes chain file
+      copy:
+        dest: /ca/certs/intermediate-kubernetes-ca-chain.crt
+        content: "{{ intermediate_kubernetes_ca_chain_contents.stdout_lines | unique |join('\n') }}"
+
+
     - name: Generate an OpenSSL private key
       community.crypto.openssl_privatekey:
         path: "/ca/private/{{ item.hostname }}.key"

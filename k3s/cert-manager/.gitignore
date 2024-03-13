@@ -1,0 +1,4 @@
+/*
+!cluster-issuer.yaml
+!nginx-ca-secret.template.yaml
+!.gitignore
