@@ -1,14 +1,33 @@
-serviceWeb:
-  loadBalancerIP: 10.0.10.49
-  annotations:
-    metallb.universe.tf/allow-shared-ip: pihole-svc
-  type: LoadBalancer
-
 serviceDns:
   loadBalancerIP: 10.0.10.49
   annotations:
     metallb.universe.tf/allow-shared-ip: pihole-svc
   type: LoadBalancer
+
+extraObjects:
+  - apiVersion: cert-manager.io/v1
+    kind: Certificate
+    metadata:
+        name: pihole-cert
+    spec:
+        secretName: pihole-tls-secret
+        issuerRef:
+            name: nginx-clusterissuer
+            kind: ClusterIssuer
+        dnsNames:
+            - pihole2.lab
+
+ingress:
+  enabled: true
+  path: /
+  hosts:
+    - pihole2.lab
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - pihole2.lab
+    secretName: pihole-tls-secret
+
 
 podDnsConfig:
   enabled: true
