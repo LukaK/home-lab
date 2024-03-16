@@ -12,37 +12,6 @@ packer {
 }
 
 
-# Variable Definitions
-variable "proxmox_api_url" {
-    type = string
-}
-
-variable "proxmox_api_token_id" {
-    type = string
-}
-
-variable "proxmox_api_token_secret" {
-    type = string
-    sensitive = true
-}
-
-locals {
-    configuration = [
-        {
-            node_name = "proxmox1"
-            vm_id = "2101"
-        },
-        {
-            node_name = "proxmox2"
-            vm_id = "2201"
-        },
-        {
-            node_name = "proxmox3"
-            vm_id = "2301"
-        }
-    ]
-}
-
 # Resource Definiation for the VM Template
 source "proxmox-iso" "ubuntu-server-focal" {
 
@@ -57,37 +26,35 @@ source "proxmox-iso" "ubuntu-server-focal" {
     template_description = "Ubuntu Server Focal Image"
 
     # iso file configuration
-    iso_file = "local:iso/ubuntu-20.04.3-live-server-amd64.iso"
-    iso_storage_pool = "local"
+    iso_file = "${var.iso_file}"
+    iso_storage_pool = "${var.iso_storage_pool}"
     unmount_iso = true
 
     # vm system settings
     qemu_agent = true
 
     # hard disc settings
-    scsi_controller = "virtio-scsi-pci"
 
     # qcow2 issues: https://github.com/hashicorp/packer-plugin-proxmox/issues/92
+    scsi_controller = "virtio-scsi-pci"
     disks {
-        disk_size = "20G"
+        disk_size = "${var.disc_size}"
         # format = "qcow2"
         format = "raw"
         storage_pool = "local-lvm"
         type = "virtio"
     }
 
-    # cpu settings
-    cores = "1"
-
-    # ram settings
-    memory = "2048"
+    # system configuration
+    cores = "${var.cpu}"
+    memory = "${var.memory}"
 
     # network settings
     network_adapters {
-        model = "virtio"
-        bridge = "vmbr0"
+        model = "${var.network_model}"
+        bridge = "${var.network_bridge}"
         firewall = "false"
-        vlan_tag = "10"
+        vlan_tag = "${var.network_vlan_tag}"
     }
 
     # cloud init settings
@@ -111,8 +78,8 @@ source "proxmox-iso" "ubuntu-server-focal" {
     http_port_min = 8800
     http_port_max = 9000
 
-    ssh_username = "ansible"
-    ssh_private_key_file = "~/.ssh/ansible/id_rsa"
+    ssh_username = "${var.ssh_username}"
+    ssh_private_key_file = "${var.ssh_private_key_file}"
 
     # timeout settings
     ssh_timeout = "40m"
@@ -124,7 +91,7 @@ build {
 
     # add source for every proxmox node
     dynamic "source" {
-        for_each = local.configuration
+        for_each = var.vm_configuration
         labels = ["proxmox-iso.ubuntu-server-focal"]
 
         content {
