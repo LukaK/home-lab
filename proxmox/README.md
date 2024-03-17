@@ -21,7 +21,8 @@ Directory structure:
 #### Usage
 ```
 # create credentials.pkr.hcl and populate with proxmox credentials
-cp packer/credentials.template.pkr.hcl packer/credentials.pkr.hcl && vim packer/credentials.pkr.hcl
+cp packer/credentials.template.pkr.hcl packer/credentials.pkr.hcl && chmod 600 packer/credentials.pkr.hcl
+vim packer/credentials.pkr.hcl
 
 # configure images if you wan to
 vim packer/ubuntu-server-focal/values.auto.pkrvars.hcl
