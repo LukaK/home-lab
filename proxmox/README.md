@@ -1,5 +1,10 @@
 # proxmox
 
+## configuration
+
+Requirements:
+- ansible
+
 ## packer
 
 Resources for creating cloud-init proxmox templates.
@@ -24,8 +29,11 @@ Directory structure:
 cp packer/credentials.template.pkr.hcl packer/credentials.pkr.hcl && chmod 600 packer/credentials.pkr.hcl
 vim packer/credentials.pkr.hcl
 
-# configure images if you wan to
+# configure image
 vim packer/ubuntu-server-focal/values.auto.pkrvars.hcl
+
+# personalize user data, ssh keys
+vim /packer/ubuntu-server-focal/http/user-data
 
 # validate packer files
 make pkr_validate
