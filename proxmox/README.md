@@ -2,36 +2,35 @@
 
 ## packer
 
-Using packer to create vm templates for home lab on cluster nodes.
+Resources for creating cloud-init proxmox templates.
 
 Requirements:
-- proxmox data cluster with three nodes ( proxmox1, proxmox2 and proxmox3 )
-- tls connection with proxmox nodes
-- iso downloaded locally on every node `ubuntu-20.04.3-live-server-amd64.iso`
 - packer
 - open firewall ports 8000-9000 for reverse proxy from proxmox vm
 
-Creating proxmox token:
+How to create proxmox token:
 1. proxmox -> data center -> permissions -> api tokens
 2. add -> choose user -> deselect privilage separation
 3. save token id and secret
 
+Directory structure:
+- `packer/credentials.template.pkrvars.hcl`: proxmox connection details
+- `packer/ubuntu-server-focal/values.auto.pkrvars.hcl`: ubuntu focal configuration variables
+- `packer/ubuntu-server-focal/`: ubuntu focal image packer resources
+
 #### Usage
 ```
-pushd packer
-
 # create credentials.pkr.hcl and populate with proxmox credentials
-cp credentials.template.pkr.hcl credentials.pkr.hcl && vim credentials.pkr.hcl
+cp packer/credentials.template.pkr.hcl packer/credentials.pkr.hcl && vim packer/credentials.pkr.hcl
 
-# install packer dependencies
-pushd ubuntu-server-focal
+# configure images if you wan to
+vim packer/ubuntu-server-focal/values.auto.pkrvars.hcl
 
-# install dependencies and build images
-packer init ubuntu-server-focal.pkr.hcl
-packer validate --var-file=../credentials.pkr.hcl .
-packer build --var-file=../credentials.pkr.hcl .
+# validate packer files
+make pkr_validate
 
-popd && popd
+# build packer images
+make pkr_build
 ```
 
 #### Resources
