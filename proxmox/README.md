@@ -1,16 +1,5 @@
 # proxmox
 
-Resources for configuring proxmox cluster with three nodes.
-
-Sections:
-- configuration: ansible configuration of proxmox nodes
-- packer: packer resources for creating proxmox templates
-
-## configuration
-
-Requirements:
-- ansible
-
 ## packer
 
 Resources for creating cloud-init proxmox templates.
