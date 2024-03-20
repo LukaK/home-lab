@@ -12,6 +12,7 @@ autoinstall:
     allow_public_ssh_keys: true
   packages:
     - qemu-guest-agent
+    - nfs-common
     - sudo
   storage:
     layout:

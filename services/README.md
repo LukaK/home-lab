@@ -28,7 +28,7 @@ kubectl apply -f namespace.yaml
 helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --values values.yaml --namespace nfs-provisioner
 
 # patch default storage class to not be the default
-kubectl  patch storageclass local-path -p '{"metadata": {"annotations": {"storageclass.kubernetes.io/is-default-class": "false"}}}'
+# kubectl  patch storageclass local-path -p '{"metadata": {"annotations": {"storageclass.kubernetes.io/is-default-class": "false"}}}'
 
 ```
 
@@ -44,6 +44,6 @@ chart: pihole
 helm repo add mojo2600 https://mojo2600.github.io/pihole-kubernetes/
 
 # install pihole chart
-helm install pihole mojo2600/pihole --values pi-hole-values.yaml --namespace pihole
+helm install pihole mojo2600/pihole --values pihole-values.yaml --namespace pihole
 
 ```

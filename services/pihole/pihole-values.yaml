@@ -43,11 +43,15 @@ dnsmasq:
 
 adminPassword: test
 
+replicaCount: 2
 resources:
   requests:
     cpu: 100m
     memory: 128Mi
 
-# persistentVolumeClaim:
-#   enabled: true
-#   size: 500 Mi
+persistentVolumeClaim:
+  enabled: true
+  size: 500Mi
+  accessMode:
+    - ReadWriteMany
+  storageClass: "nfs-client"
