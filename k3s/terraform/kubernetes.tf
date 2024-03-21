@@ -13,7 +13,7 @@ resource "proxmox_vm_qemu" "k3s-ctrl" {
     full_clone = true
     onboot = true
 
-    cores = 2
+    cores = 1
     sockets = 1
     cpu = "host"
     memory = 4000
@@ -33,7 +33,7 @@ resource "proxmox_vm_qemu" "k3s-ctrl" {
     }
 
     # cloud init settings
-    ipconfig0 = "ip=10.0.10.${70 + count.index}/24,gw=10.0.10.1"
+    ipconfig0 = "ip=10.0.10.${84 + count.index}/24,gw=10.0.10.1"
     nameserver = "10.0.10.94"
 }
 
@@ -81,6 +81,6 @@ resource "proxmox_vm_qemu" "k3s-wrk" {
     }
 
     # cloud init settings
-    ipconfig0 = "ip=10.0.10.${73 + count.index}/24,gw=10.0.10.1"
+    ipconfig0 = "ip=10.0.10.${87 + count.index}/24,gw=10.0.10.1"
     nameserver = "10.0.10.94"
 }

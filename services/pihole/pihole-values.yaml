@@ -1,5 +1,5 @@
 serviceDns:
-  loadBalancerIP: 10.0.10.49
+  loadBalancerIP: 10.0.10.81
   annotations:
     metallb.universe.tf/allow-shared-ip: pihole-svc
   type: LoadBalancer
@@ -15,17 +15,17 @@ extraObjects:
             name: nginx-clusterissuer
             kind: ClusterIssuer
         dnsNames:
-            - pihole2.lab
+            - pihole.cluster.lab
 
 ingress:
   enabled: true
   path: /
   hosts:
-    - pihole2.lab
+    - pihole.cluster.lab
   ingressClassName: nginx
   tls:
   - hosts:
-    - pihole2.lab
+    - pihole.cluster.lab
     secretName: pihole-tls-secret
 
 
@@ -37,21 +37,21 @@ podDnsConfig:
   - 1.1.1.1
 
 
-dnsmasq:
-  customDnsEntries:
-    - address=/test.lab/10.0.10.15
+# dnsmasq:
+#   customDnsEntries:
+#     - address=/test.lab/10.0.10.15
 
 adminPassword: test
 
-replicaCount: 2
+replicaCount: 1
 resources:
   requests:
     cpu: 100m
     memory: 128Mi
 
-persistentVolumeClaim:
-  enabled: true
-  size: 500Mi
-  accessMode:
-    - ReadWriteMany
-  storageClass: "nfs-client"
+# persistentVolumeClaim:
+#   enabled: true
+#   size: 500Mi
+#   storageClass: "nfs-client"
+#   accessModes:
+#     - ReadWriteMany

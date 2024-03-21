@@ -5,6 +5,9 @@ Steps:
 - provision the infrastructure with terraform
 - install and configure k3s with ansible
 - download kubeconfig from one of the master nodes
+- setup ingress controller
+- setup certificate manager
+- setup nfs provisioner
 
 
 ### Ansible
