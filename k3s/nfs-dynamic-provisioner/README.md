@@ -5,7 +5,7 @@ create nfs share on synology nas:
 - add admin read/write permissions and accet default options
 - edit nfs share -> nfs permissions -> create
 - add ip subnet
-- update squash map to elevate users to admins
+- update squash map to elevate users to admins ( avoid for now, mount directory permissions mismatch when container is running as non root )
 - check allow non privilaged ports
 - check allow users to access subdirectories
 

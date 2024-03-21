@@ -28,13 +28,16 @@ ingress:
     - pihole.cluster.lab
     secretName: pihole-tls-secret
 
+extraEnvVars:
+  TZ: "Europe/Zagreb"
 
-podDnsConfig:
-  enabled: true
-  policy: "None"
-  nameservers:
-  - 127.0.0.1
-  - 1.1.1.1
+
+# podDnsConfig:
+#   enabled: true
+#   policy: "None"
+#   nameservers:
+#   - 127.0.0.1
+#   - 1.1.1.1
 
 
 # dnsmasq:
@@ -49,9 +52,9 @@ resources:
     cpu: 100m
     memory: 128Mi
 
-# persistentVolumeClaim:
-#   enabled: true
-#   size: 500Mi
-#   storageClass: "nfs-client"
-#   accessModes:
-#     - ReadWriteMany
+persistentVolumeClaim:
+  enabled: true
+  size: 2Gi
+  storageClass: "nfs-client"
+  accessModes:
+    - ReadWriteMany
