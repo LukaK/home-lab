@@ -33,3 +33,4 @@ help:
 	@echo '-- DOCUMENTATION --'
 	@echo 'template                     - build template for version'
 	@echo 'show_versions                - list versions'
+	@echo 'deploy                       - deploy namespace and nginx ingress controller
