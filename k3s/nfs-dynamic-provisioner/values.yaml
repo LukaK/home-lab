@@ -6,3 +6,4 @@ nfs:
 storageClass:
   defaultClass: true
   onDelete: "delete"
+  name: nfs-client

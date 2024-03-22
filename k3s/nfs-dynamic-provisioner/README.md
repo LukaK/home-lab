@@ -1,6 +1,8 @@
 # nfs dynamic provisioner
 
-create nfs share on synology nas:
+Dynamic nfs provisioner used for provisioning persistent volumes dynamically on nfs server.
+
+Create nfs share on synology nas:
 - control panel -> shared folder -> create
 - add admin read/write permissions and accet default options
 - edit nfs share -> nfs permissions -> create
@@ -9,20 +11,24 @@ create nfs share on synology nas:
 - check allow non privilaged ports
 - check allow users to access subdirectories
 
-k3s node requirements:
+K3s node requirements:
 - `sudo apt install nfs-common`
 
-configure nfs dynamic provisioner:
+Defaults:
+- namespace: nfs-provisioner
+- chart version: 4.0.18
+
+#### Deployment
 ```
-# add helm repository
-helm repo add nfs-subdir-external-provisioner https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner
+# search for compatible version
+make show_versions
 
-# install nfs provisioner
-kubectl apply -f namespace.yaml
-helm install nfs-subdir-external-provisioner nfs-subdir-external-provisioner/nfs-subdir-external-provisioner --values values.yaml --namespace nfs-provisioner
+# update chart version in makefile if necessary (CHART_VERSION)
+vi Makefile
 
-# patch default storage class to not be the default
-# kubectl  patch storageclass local-path -p '{"metadata": {"annotations": {"storageclass.kubernetes.io/is-default-class": "false"}}}'
+# build new manifest file for a version
+make
 
+# install nginx ingress controller
+make install
 ```
-
