@@ -7,9 +7,6 @@ NAMESPACE = nfs-provisioner
 # Default target executed when no arguments are given to make.
 all: build
 
-######################
-# PACKER
-######################
 build:
 	helm template  nfs-subdir-external-provisioner \
 		--repo https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner\

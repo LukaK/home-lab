@@ -6,9 +6,6 @@ NAMESPACE = cert-manager
 # Default target executed when no arguments are given to make.
 all: build
 
-######################
-# PACKER
-######################
 build:
 	helm template cert-manager \
 		--repo https://charts.jetstack.io \

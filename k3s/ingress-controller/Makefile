@@ -6,9 +6,6 @@ NAMESPACE = ingress-nginx
 # Default target executed when no arguments are given to make.
 all: build
 
-######################
-# PACKER
-######################
 build:
 	helm template ingress-nginx \
 		--repo https://kubernetes.github.io/ingress-nginx \
