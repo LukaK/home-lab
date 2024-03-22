@@ -1,14 +1,14 @@
-.PHONY: all template show_versions deploy
+.PHONY: all build show_versions install
 
 CHART_VERSION = 4.10.0
 
 # Default target executed when no arguments are given to make.
-all: help
+all: build
 
 ######################
 # PACKER
 ######################
-template:
+build:
 	helm template ingress-nginx \
 		--repo https://kubernetes.github.io/ingress-nginx \
 		--version $(CHART_VERSION) \
@@ -20,7 +20,7 @@ show_versions:
 	helm repo update
 	helm search repo ingress-nginx --versions
 
-deploy:
+install:
 	kubectl apply -f manifests/namespace.yaml
 	kubectl apply -f manifests/nginx-ingress-$(CHART_VERSION).yaml
 
@@ -31,6 +31,6 @@ deploy:
 help:
 	@echo '===================='
 	@echo '-- DOCUMENTATION --'
-	@echo 'template                     - build template for version'
+	@echo 'build                        - build template for version'
 	@echo 'show_versions                - list versions'
-	@echo 'deploy                       - deploy namespace and nginx ingress controller
+	@echo 'install                      - install nginx ingress controller

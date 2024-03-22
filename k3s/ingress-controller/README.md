@@ -16,8 +16,8 @@ make show_versions
 vi Makefile
 
 # build new manifest file for a version
-make template
+make
 
-# deploy nginx ingress controller
-make deploy
+# install nginx ingress controller
+make install
 ```
