@@ -9,9 +9,6 @@ Details:
 #### Deployment
 
 ```
-# create namespace
-kubectl apply -f manifests/namespace.yaml
-
 # search for compatible version
 make show_versions
 
@@ -22,5 +19,5 @@ vi Makefile
 make template
 
 # deploy nginx ingress controller
-kubectl apply -f manifests/nginx-ingress-${CHART_VERSION}.yaml
+make deploy
 ```

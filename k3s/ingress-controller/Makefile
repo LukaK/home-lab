@@ -1,4 +1,4 @@
-.PHONY: all template show_versions
+.PHONY: all template show_versions deploy
 
 CHART_VERSION = 4.10.0
 
@@ -20,6 +20,9 @@ show_versions:
 	helm repo update
 	helm search repo ingress-nginx --versions
 
+deploy:
+	kubectl apply -f manifests/namespace.yaml
+	kubectl apply -f manifests/nginx-ingress-$(CHART_VERSION).yaml
 
 ######################
 # HELP
