@@ -2,9 +2,9 @@
 
 Ingress controller used for url path routing to cluster services.
 
-Details:
+Defaults:
 - namespace: ingress-nginx
-- default chart version: 4.10.0
+- chart version: 4.10.0
 
 #### Deployment
 

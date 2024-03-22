@@ -1,4 +1,6 @@
 /*
-!cluster-issuer.yaml
-!nginx-ca-secret.template.yaml
+!ca-secret.template.yaml
 !.gitignore
+!manifests/
+!Makefile
+!values.yaml
