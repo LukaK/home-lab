@@ -12,6 +12,7 @@ build:
 		--repo https://charts.jetstack.io \
 		--version $(CHART_VERSION) \
 		--namespace $(NAMESPACE) \
+		--include-crds \
 		--values values.yaml > manifests/cert-manager-$(CHART_VERSION).yaml
 
 show_versions:

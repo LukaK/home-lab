@@ -11,6 +11,7 @@ build:
 		--repo https://kubernetes.github.io/ingress-nginx \
 		--version $(CHART_VERSION) \
 		--namespace $(NAMESPACE) \
+		--include-crds \
 		--values values.yaml > manifests/nginx-ingress-$(CHART_VERSION).yaml
 
 show_versions:

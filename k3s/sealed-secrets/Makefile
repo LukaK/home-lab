@@ -11,6 +11,7 @@ build:
 		--repo https://bitnami-labs.github.io/sealed-secrets\
 		--version $(CHART_VERSION) \
 		--namespace $(NAMESPACE) \
+		--include-crds \
 		--values values.yaml > manifests/sealed-secrets-$(CHART_VERSION).yaml
 
 show_versions:

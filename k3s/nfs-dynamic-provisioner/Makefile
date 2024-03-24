@@ -12,6 +12,7 @@ build:
 		--repo https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner\
 		--version $(CHART_VERSION) \
 		--namespace $(NAMESPACE) \
+		--include-crds \
 		--values values.yaml > manifests/nfs-external-provisioner-$(CHART_VERSION).yaml
 
 show_versions:
