@@ -7,7 +7,7 @@ NAMESPACE = cert-manager
 all: build
 
 build:
-	kubeseal -f mamanifests/ca-secret.yaml -w manifests/ca-sealedsecret.yaml
+	kubeseal -f ca-secret.yaml -w manifests/ca-sealedsecret.yaml
 	helm template cert-manager \
 		--repo https://charts.jetstack.io \
 		--version $(CHART_VERSION) \

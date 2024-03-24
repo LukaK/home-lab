@@ -21,7 +21,7 @@ make show_versions
 vi Makefile
 
 # download intermediate certificate from ca server
-cp nginx-ca-secret.template.yaml manifests/ca-secret.yaml && vi manifests/nginx-ca-secret.yaml
+cp nginx-ca-secret.template.yaml ca-secret.yaml && vi ca-secret.yaml
 
 # build new manifest file for a version
 make
