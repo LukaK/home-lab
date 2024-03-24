@@ -41,4 +41,3 @@ kubeseal -f secret.yaml -w sealedsecret.yaml
     sealedsecrets.bitnami.com/namespace-wide: "true" # namespace scope of the secret
     sealedsecrets.bitnami.com/cluster-wide: "true"   # cluster wide scope of the secret ( overrides namaspece-wide )
 ```
-

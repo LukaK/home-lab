@@ -7,6 +7,7 @@ NAMESPACE = cert-manager
 all: build
 
 build:
+	kubeseal -f mamanifests/ca-secret.yaml -w manifests/ca-sealedsecret.yaml
 	helm template cert-manager \
 		--repo https://charts.jetstack.io \
 		--version $(CHART_VERSION) \
@@ -22,12 +23,12 @@ install:
 	kubectl apply -f manifests/namespace.yaml
 	kubectl apply -f manifests/cert-manager-$(CHART_VERSION).yaml
 	kubectl wait --timeout=300s --for=condition=complete job -l app=startupapicheck -n $(NAMESPACE)
-	kubectl apply -f manifests/ca-secret.yaml
+	kubectl apply -f manifests/ca-sealedsecret.yaml
 	kubectl apply -f manifests/cluster-issuer.yaml
 
 clean:
 	kubectl delete -f manifests/cluster-issuer.yaml
-	kubectl delete -f manifests/ca-secret.yaml
+	kubectl delete -f manifests/ca-sealedsecret.yaml
 	kubectl delete -f manifests/cert-manager-$(CHART_VERSION).yaml
 	kubectl delete -f manifests/namespace.yaml
 

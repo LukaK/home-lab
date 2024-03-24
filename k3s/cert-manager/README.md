@@ -20,11 +20,11 @@ make show_versions
 # update chart version in makefile if necessary (CHART_VERSION)
 vi Makefile
 
-# build new manifest file for a version
-make
-
 # download intermediate certificate from ca server
 cp nginx-ca-secret.template.yaml manifests/ca-secret.yaml && vi manifests/nginx-ca-secret.yaml
+
+# build new manifest file for a version
+make
 
 # install nginx ingress controller ( TODO: needs wait conditions kubectl wait)
 make install
