@@ -5,5 +5,5 @@ nfs:
 
 storageClass:
   defaultClass: true
-  onDelete: "delete"
+  onDelete: "retain"
   name: nfs-client

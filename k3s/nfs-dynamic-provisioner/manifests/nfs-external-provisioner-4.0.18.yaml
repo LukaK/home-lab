@@ -28,7 +28,7 @@ reclaimPolicy: Delete
 volumeBindingMode: Immediate
 parameters:
   archiveOnDelete: "true"
-  onDelete: "delete"
+  onDelete: "retain"
 ---
 # Source: nfs-subdir-external-provisioner/templates/clusterrole.yaml
 kind: ClusterRole
