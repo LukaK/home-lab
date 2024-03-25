@@ -39,12 +39,14 @@ podDnsConfig:
   - 127.0.0.1
   - 1.1.1.1
 
-
 dnsmasq:
   customDnsEntries:
     - address=/test.lab/10.0.10.15
 
-adminPassword: test
+admin:
+  enabled: true
+  existingSecret: "pihole-secret"
+  passwordKey: adminPassword
 
 replicaCount: 2
 resources:
