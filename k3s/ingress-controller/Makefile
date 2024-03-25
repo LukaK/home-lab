@@ -21,10 +21,10 @@ show_versions:
 
 install:
 	kubectl apply -f manifests/namespace.yaml
-	kubectl apply -f manifests/nginx-ingress-$(CHART_VERSION).yaml
+	kubectl apply -n $(NAMESPACE) -f manifests/nginx-ingress-$(CHART_VERSION).yaml
 
 clean:
-	kubectl delete -f manifests/nginx-ingress-$(CHART_VERSION).yaml
+	kubectl delete -n $(NAMESPACE) -f manifests/nginx-ingress-$(CHART_VERSION).yaml
 	kubectl delete -f manifests/namespace.yaml
 
 

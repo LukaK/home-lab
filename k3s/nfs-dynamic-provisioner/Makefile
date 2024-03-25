@@ -22,10 +22,10 @@ show_versions:
 
 install:
 	kubectl apply -f manifests/namespace.yaml
-	kubectl apply -f manifests/nfs-external-provisioner-$(CHART_VERSION).yaml -n $(NAMESPACE)
+	kubectl apply -n $(NAMESPACE) -f manifests/nfs-external-provisioner-$(CHART_VERSION).yaml
 
 clean:
-	kubectl delete -f manifests/nfs-external-provisioner-$(CHART_VERSION).yaml -n $(NAMESPACE)
+	kubectl delete -n $(NAMESPACE) -f manifests/nfs-external-provisioner-$(CHART_VERSION).yaml
 	kubectl delete -f manifests/namespace.yaml
 
 

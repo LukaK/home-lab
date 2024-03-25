@@ -20,10 +20,10 @@ show_versions:
 	helm search repo sealed-secrets --versions
 
 install:
-	kubectl apply -f manifests/sealed-secrets-$(CHART_VERSION).yaml
+	kubectl apply -n $(NAMESPACE) -f manifests/sealed-secrets-$(CHART_VERSION).yaml
 
 clean:
-	kubectl delete -f manifests/sealed-secrets-$(CHART_VERSION).yaml
+	kubectl delete -n $(NAMESPACE) -f manifests/sealed-secrets-$(CHART_VERSION).yaml
 
 
 ######################

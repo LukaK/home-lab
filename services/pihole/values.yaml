@@ -32,21 +32,21 @@ extraEnvVars:
   TZ: "Europe/Zagreb"
 
 
-# podDnsConfig:
-#   enabled: true
-#   policy: "None"
-#   nameservers:
-#   - 127.0.0.1
-#   - 1.1.1.1
+podDnsConfig:
+  enabled: true
+  policy: "None"
+  nameservers:
+  - 127.0.0.1
+  - 1.1.1.1
 
 
-# dnsmasq:
-#   customDnsEntries:
-#     - address=/test.lab/10.0.10.15
+dnsmasq:
+  customDnsEntries:
+    - address=/test.lab/10.0.10.15
 
 adminPassword: test
 
-replicaCount: 1
+replicaCount: 2
 resources:
   requests:
     cpu: 100m
