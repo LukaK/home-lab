@@ -1,0 +1,34 @@
+---
+## media.radarr.values.yml
+replicaCount: 1
+
+image:
+  repository: "ghcr.io/onedr0p/radarr"
+  tag: "5.3.6.8612"
+  pullPolicy: IfNotPresent
+
+env:
+  - name: PUID
+    value: "1000"
+  - name: PGID
+    value: "1000"
+
+service:
+  type: ClusterIP
+  port: 80
+
+volumes:
+  - name: "media-ssd"
+    persistentVolumeClaim:
+      claimName:  "media-pvc"
+
+volumeMounts:
+  - name: "media-ssd"
+    mountPath: "/config"
+    subPath: "configs/radarr" # Path /mnt/ssd/media/configs/radarr where radarr writes the configuration
+  - name: "media-ssd"
+    mountPath: "/downloads/transmission"
+    subPath: "downloads/transmission" # Path /mnt/ssd/media/downloads/transmission where radarr picks up downloaded movies
+  - name: media-ssd
+    mountPath: "/movies"
+    subPath: "library/movies" # Path /mnt/ssd/media/library/movies where radarr moves and renames the movies
