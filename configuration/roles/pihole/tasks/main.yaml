@@ -33,6 +33,14 @@
   notify:
     - Restart pihole container
 
+
+- name: Set wildcard domains
+  copy:
+    dest: /pihole/dnsmasq.d/02-my-wildcard-dns.conf
+    content: "address=/cluster.lab/10.0.10.82"
+  notify:
+    - Restart pihole container
+
 - name: Copy external configuration
   ansible.builtin.template:
     src: external.conf.j2
