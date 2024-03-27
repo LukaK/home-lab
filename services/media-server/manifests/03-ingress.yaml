@@ -10,7 +10,11 @@ spec:
         name: nginx-clusterissuer
         kind: ClusterIssuer
     dnsNames:
-        - media.cluster.lab
+        - sonarr.media.cluster.lab
+        - radarr.media.cluster.lab
+        - prowlarr.media.cluster.lab
+        - transmission.media.cluster.lab
+        - plex.media.cluster.lab
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -24,41 +28,57 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-      - media.cluster.lab
+      - sonarr.media.cluster.lab
+      - radarr.media.cluster.lab
+      - prowlarr.media.cluster.lab
+      - transmission.media.cluster.lab
+      - plex.media.cluster.lab
       secretName: media-tls-secret
   rules:
-  - host: "media.cluster.lab"
+  - host: sonarr.media.cluster.lab
     http:
       paths:
-        - path: "/transmission"
-          pathType: Prefix
-          backend:
-            service:
-              name: "transmission"
-              port:
-                number: 80
-        - path: "/sonarr"
+        - path: /
           pathType: Prefix
           backend:
             service:
               name: "sonarr"
               port:
                 number: 80
-        - path: "/prowlarr"
-          pathType: Prefix
-          backend:
-            service:
-              name: "prowlarr"
-              port:
-                number: 80
-        - path: "/radarr"
+  - host: radarr.media.cluster.lab
+    http:
+      paths:
+        - path: /
           pathType: Prefix
           backend:
             service:
               name: "radarr"
               port:
                 number: 80
-        - path: "/"
+  - host: prowlarr.media.cluster.lab
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: "prowlarr"
+              port:
+                number: 80
+  - host: transmission.media.cluster.lab
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: "transmission"
+              port:
+                number: 80
+  - host: plex.media.cluster.lab
+    http:
+      paths:
+        - path: /
           pathType: Prefix
           backend:
             service:
