@@ -44,7 +44,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  ingressClassName: ingress-nginx
+  ingressClassName: nginx
   tls:
     - hosts:
       - test.cluster.lab
