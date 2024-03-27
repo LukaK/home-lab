@@ -1,0 +1,62 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  containers:
+  - image: nginx
+    name: nginx
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test-service
+spec:
+  selector:
+    app: nginx
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+    name: test-cert
+spec:
+    secretName: test-tls-secret
+    issuerRef:
+        name: nginx-clusterissuer
+        kind: ClusterIssuer
+    dnsNames:
+        - test.cluster.lab
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: test-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: ingress-nginx
+  tls:
+    - hosts:
+      - test.cluster.lab
+      secretName: test-tls-secret
+  rules:
+  - host: test.cluster.lab
+    http:
+      paths:
+      - path: /test
+        pathType: Prefix
+        backend:
+          service:
+            name: test-service
+            port:
+              number: 80
