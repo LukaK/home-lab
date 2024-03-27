@@ -64,7 +64,7 @@ spec:
             service:
               name: "prowlarr"
               port:
-                number: 80
+                number: 9696
   - host: transmission.media.cluster.lab
     http:
       paths:
