@@ -23,6 +23,7 @@ show_versions:
 install:
 	kubectl apply -f manifests/namespace.yaml
 	kubectl apply -n $(NAMESPACE) -f manifests/nfs-external-provisioner-$(CHART_VERSION).yaml
+	kubectl wait pods --timeout=300s --for=condition=Ready -l app=nfs-subdir-external-provisioner -n $(NAMESPACE)
 
 clean:
 	kubectl delete -n $(NAMESPACE) -f manifests/nfs-external-provisioner-$(CHART_VERSION).yaml

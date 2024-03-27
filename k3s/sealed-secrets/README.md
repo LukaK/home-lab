@@ -106,3 +106,22 @@ make
 # install nginx ingress controller
 make install
 ```
+
+## Examples
+
+```
+pushd examples
+
+# create sealed secret
+kubeseal -f secret.yaml -w sealedsecret.yaml
+
+# create sealed secret
+kubectl apply -f sealedsecret.yaml
+
+# check that the secret is created
+kubectl get secret
+kubectl get sealedsecretsecret
+
+# cleanup
+kubectl delete -f sealedsecret.yaml
+```

@@ -22,6 +22,7 @@ show_versions:
 install:
 	kubectl apply -f manifests/namespace.yaml
 	kubectl apply -n $(NAMESPACE) -f manifests/nginx-ingress-$(CHART_VERSION).yaml
+	kubectl wait pods --timeout=300s --for=condition=Ready -n $(NAMESPACE) -l app.kubernetes.io/component=controller
 
 clean:
 	kubectl delete -n $(NAMESPACE) -f manifests/nginx-ingress-$(CHART_VERSION).yaml

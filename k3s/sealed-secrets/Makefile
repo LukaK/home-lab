@@ -21,6 +21,7 @@ show_versions:
 
 install:
 	kubectl apply -n $(NAMESPACE) -f manifests/sealed-secrets-$(CHART_VERSION).yaml
+	kubectl wait pods --timeout=300s --for=condition=Ready -n $(NAMESPACE) -l app.kubernetes.io/name=sealed-secrets
 
 clean:
 	kubectl delete -n $(NAMESPACE) -f manifests/sealed-secrets-$(CHART_VERSION).yaml

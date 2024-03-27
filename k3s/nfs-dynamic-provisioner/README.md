@@ -18,7 +18,7 @@ Defaults:
 - namespace: nfs-provisioner
 - chart version: 4.0.18
 
-#### Deployment
+## Deployment
 ```
 # search for compatible version
 make show_versions
@@ -31,4 +31,21 @@ make
 
 # install nginx ingress controller
 make install
+```
+
+
+## Examples
+
+```
+pushd examples
+
+# create sealed secret
+kubectl apply -f pvc.yaml
+
+# check that pv and pvc are created
+kubectl get pv
+kubectl get pvc
+
+# cleanup
+kubectl delete -f pvc.yaml
 ```
