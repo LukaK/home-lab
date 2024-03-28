@@ -1,6 +1,10 @@
 # ingress controller
 
-Ingress controller used for url path routing to cluster services.
+Ingress controller used as reverse proxy.
+
+Features:
+- tls termination
+- layer 7 load balancing
 
 Defaults:
 - namespace: ingress-nginx

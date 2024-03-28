@@ -12,7 +12,7 @@ Defaults:
 - namespace: cert-manager
 - chart version: v1.14.4
 
-#### Deployment
+## Deployment
 ```
 # search for compatible version
 make show_versions
