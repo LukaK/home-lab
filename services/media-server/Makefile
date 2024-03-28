@@ -1,6 +1,6 @@
-.PHONY: all build install clean build_prowlarr show_versions build_radarr show_radarr_values build_sonarr show_sonarr_values
+.PHONY: all build install clean build_prowlarr show_versions build_radarr show_radarr_values build_sonarr show_sonarr_values show_prowlarr_versions
 
-PROWLARR_CHART_VERSION = 1.32.0
+PROWLARR_CHART_VERSION = 16.6.0
 RADARR_CHART_VERSION = 0.1.0
 SONARR_CHART_VERSION = 0.1.0
 TRANSMISSION_CHART_VERSION = 0.1.0
@@ -10,11 +10,16 @@ all: build
 
 build_prowlarr:
 	helm template prowlarr prowlarr \
-		--repo https://charts.pree.dev \
+		--repo https://charts.truecharts.org \
 		--version $(PROWLARR_CHART_VERSION) \
 		--namespace $(NAMESPACE) \
 		--include-crds \
 		--values prowlarr-values.yaml > manifests/04-prowlarr-$(PROWLARR_CHART_VERSION).yaml
+
+show_prowlarr_versions:
+	helm repo add truecharts https://charts.truecharts.org
+	helm repo update
+	helm search repo truecharts --versions | grep prowlarr
 
 show_versions:
 	helm repo add pree-helm-charts https://charts.pree.dev
