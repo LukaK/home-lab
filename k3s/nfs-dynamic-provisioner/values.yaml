@@ -2,8 +2,9 @@ nfs:
   server: 10.0.10.96
   path: /volume1/k3sdata/
   nfsvers: 4
+  reclaimPolicy: Delete
 
 storageClass:
   defaultClass: true
-  onDelete: "retain"
+  archiveOnDelete: true
   name: nfs-client
