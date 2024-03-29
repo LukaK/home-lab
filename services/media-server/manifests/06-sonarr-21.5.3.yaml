@@ -1,0 +1,109 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr
+  namespace: media
+  labels:
+    app: "sonarr"
+spec:
+  type: ClusterIP
+  publishNotReadyAddresses: false
+  ports:
+    - name: main
+      port: 8989
+      protocol: TCP
+      targetPort: 8989
+  selector:
+    app: sonarr
+    pod.name: main
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr
+  namespace: media
+  labels:
+    app: "sonarr"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: sonarr
+      pod.name: main
+  template:
+    metadata:
+      labels:
+        app: "sonarr"
+        pod.name: "main"
+    spec:
+      containers:
+        - name: sonarr
+          image: lscr.io/linuxserver/sonarr:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: main
+              containerPort: 8989
+              protocol: TCP
+              hostPort: null
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: false
+              subPath: sonarr
+            - name: data
+              mountPath: /data
+              readOnly: false
+          # livenessProbe:
+          #   httpGet:
+          #     port: 8989
+          #     path: /ping
+          #     scheme: HTTP
+          #   initialDelaySeconds: 10
+          #   failureThreshold: 5
+          #   successThreshold: 1
+          #   timeoutSeconds: 5
+          #   periodSeconds: 10
+          # readinessProbe:
+          #   httpGet:
+          #     port: 8989
+          #     path: /ping
+          #     scheme: HTTP
+          #   initialDelaySeconds: 10
+          #   failureThreshold: 5
+          #   successThreshold: 2
+          #   timeoutSeconds: 5
+          #   periodSeconds: 10
+          # startupProbe:
+          #   httpGet:
+          #     port: 8989
+          #     path: /ping
+          #     scheme: HTTP
+          #   initialDelaySeconds: 10
+          #   failureThreshold: 60
+          #   successThreshold: 1
+          #   timeoutSeconds: 2
+          #   periodSeconds: 5
+          resources:
+            requests:
+              cpu: 10m
+              memory: 50Mi
+            limits:
+              cpu: 4000m
+              memory: 8Gi
+          env:
+            - name: "TZ"
+              value: "UTC"
+            - name: "PUID"
+              value: "1000"
+            - name: "PGID"
+              value: "1000"
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: media-configs-pvc
+        - name: data
+          persistentVolumeClaim:
+            claimName: media-data-pvc
