@@ -52,6 +52,7 @@ Configuration:
 Transmission configuration:
 - change `Host: transmission`
 - change `Port: 9091`
+- change mapping so that `/downloads` points to `/data/downloads`
 
 
 ## sonarr configuration
@@ -64,6 +65,7 @@ Configuration:
 Transmission configuration:
 - change `Host: transmission`
 - change `Port: 9091`
+- change mapping so that `/downloads` points to `/data/downloads`
 
 
 ## transmission configuration
