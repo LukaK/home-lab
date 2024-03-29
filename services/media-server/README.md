@@ -21,7 +21,7 @@ Requirements:
 
 ```
 # deploy resources
-make && make install
+make install
 ```
 
 ## NFS
