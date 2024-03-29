@@ -95,6 +95,11 @@ spec:
           env:
             - name: "TZ"
               value: "UTC"
+            - name: "PLEX_CLAIM"
+              valueFrom:
+                secretKeyRef:
+                  name: plex-secret
+                  key: claim
       volumes:
         - name: config
           persistentVolumeClaim:

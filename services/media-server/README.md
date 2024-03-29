@@ -26,6 +26,7 @@ make install
 
 ## NFS
 Open nfs share for the data and create directory strcture `library/{tv,movies}` and `downloads/complete`.
+Permisssion issues....
 
 ## prowlarr
 
@@ -35,26 +36,22 @@ Configuration settings for transmission client is in `settings -> download clien
 Radarr configuration:
 - go to `radarr.media.cluster.lab -> settings -> general` and copy token to prowlarr `API Key` field
 - change `Prowlarr Server: http://prowlarr:9696`
-- change `Radarr Server: http://radarr:80`
+- change `Radarr Server: http://radarr:7878`
 
 Sonarr configuration:
 - go to `sonarr.media.cluster.lab -> settings -> general` and copy token to prowlarr `API Key` field
 - change `Prowlarr Server: http://prowlarr:9696`
 - change `Sonarr Server: http://sonarr:8989`
 
-Transmission configuration:
-- change `Host: transmission`
-- change `Port: 80`
-
 ## radarr configuration
 Configuration settings for transmission client is in `settings -> download clients`
 
 Configuration:
-- go to `Settings -> Media Management` and update root folder to `/movies`
+- go to `Settings -> Media Management` and update root folder to `/data/library/movies`
 
 Transmission configuration:
 - change `Host: transmission`
-- change `Port: 80`
+- change `Port: 9091`
 
 
 ## sonarr configuration
@@ -62,12 +59,18 @@ Configuration settings for transmission client is in `settings -> download clien
 
 Configuration:
 - go to `Settings -> Media Management` and update root folder to `/tv`
+- go to `Settings -> metadata` and update activate creation of metadata for plex
 
 Transmission configuration:
 - change `Host: transmission`
-- change `Port: 80`
+- change `Port: 9091`
 
 
 ## transmission configuration
 Configuration:
 - change complted directory to `/downloads/transmission`
+
+
+## plex configuration
+Configuration:
+- add movie and show library
