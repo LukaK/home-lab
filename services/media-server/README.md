@@ -33,14 +33,14 @@ Configuration settings for radarr and sonarr is in `settings -> apps`.
 Configuration settings for transmission client is in `settings -> download client`
 
 Radarr configuration:
-- go to `radarr.media.cluster.local -> settings -> general` and copy token to prowlarr `API Key` field
+- go to `radarr.media.cluster.lab -> settings -> general` and copy token to prowlarr `API Key` field
 - change `Prowlarr Server: http://prowlarr:9696`
 - change `Radarr Server: http://radarr:80`
 
 Sonarr configuration:
-- go to `sonarr.media.cluster.local -> settings -> general` and copy token to prowlarr `API Key` field
+- go to `sonarr.media.cluster.lab -> settings -> general` and copy token to prowlarr `API Key` field
 - change `Prowlarr Server: http://prowlarr:9696`
-- change `Sonarr Server: http://sonarr:80`
+- change `Sonarr Server: http://sonarr:8989`
 
 Transmission configuration:
 - change `Host: transmission`

@@ -67,7 +67,7 @@ spec:
         pod.name: "main"
         release: "radarr"
       annotations:
-        rollme: "8tAzN"
+        rollme: "w2enK"
     spec:
       serviceAccountName: default
       automountServiceAccountToken: false

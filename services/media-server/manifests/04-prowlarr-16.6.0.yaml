@@ -1698,7 +1698,7 @@ spec:
         pod.name: "main"
         release: "prowlarr"
       annotations:
-        rollme: "gGxdm"
+        rollme: "PIFPh"
     spec:
       serviceAccountName: default
       automountServiceAccountToken: false

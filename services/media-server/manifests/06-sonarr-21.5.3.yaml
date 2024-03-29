@@ -67,7 +67,7 @@ spec:
         pod.name: "main"
         release: "sonarr"
       annotations:
-        rollme: "AR4cN"
+        rollme: "R31QI"
     spec:
       serviceAccountName: default
       automountServiceAccountToken: false

@@ -100,7 +100,7 @@ spec:
         pod.name: "main"
         release: "transmission"
       annotations:
-        rollme: "pw7UT"
+        rollme: "Oapxs"
     spec:
       serviceAccountName: default
       automountServiceAccountToken: false

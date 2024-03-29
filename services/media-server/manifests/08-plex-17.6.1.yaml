@@ -67,7 +67,7 @@ spec:
         pod.name: "main"
         release: "plex"
       annotations:
-        rollme: "JdNhS"
+        rollme: "MxxmT"
     spec:
       serviceAccountName: default
       automountServiceAccountToken: false
