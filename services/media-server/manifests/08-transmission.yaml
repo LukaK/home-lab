@@ -126,6 +126,16 @@ spec:
               value: "1000"
             - name: "PGID"
               value: "1000"
+            - name: "USER"
+              valueFrom:
+                secretKeyRef:
+                  name: transmission-secret
+                  key: username
+            - name: "PASS"
+              valueFrom:
+                secretKeyRef:
+                  name: transmission-secret
+                  key: password
       volumes:
         - name: config
           persistentVolumeClaim:
