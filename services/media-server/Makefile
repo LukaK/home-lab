@@ -5,7 +5,7 @@ NAMESPACE = media
 all: build
 
 build:
-	@echo 'Nothing to build'
+	kubeseal -f transmission-secret.yaml -w manifests/07-transmission-sealedsecret.yaml
 
 install:
 	kubectl apply -f manifests -n $(NAMESPACE)
