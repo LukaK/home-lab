@@ -1698,7 +1698,7 @@ spec:
         pod.name: "main"
         release: "prowlarr"
       annotations:
-        rollme: "rPfgb"
+        rollme: "gGxdm"
     spec:
       serviceAccountName: default
       automountServiceAccountToken: false
@@ -1760,6 +1760,7 @@ spec:
             - name: config
               mountPath: /config
               readOnly: false
+              subPath: prowlarr
             - name: devshm
               mountPath: /dev/shm
               readOnly: false
@@ -1841,7 +1842,7 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: media-pvc
+            claimName: media-configs-pvc
         - name: devshm
           emptyDir:
             medium: Memory

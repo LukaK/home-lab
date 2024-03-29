@@ -1,9 +1,10 @@
-.PHONY: all build install clean build_prowlarr show_versions build_radarr show_radarr_values build_sonarr show_sonarr_values show_prowlarr_versions
+.PHONY: all build install clean build_prowlarr build_radarr build_sonarr build_transmission build_plex show_versions
 
+PLEX_CHART_VERSION = 17.6.1
 PROWLARR_CHART_VERSION = 16.6.0
-RADARR_CHART_VERSION = 0.1.0
-SONARR_CHART_VERSION = 0.1.0
-TRANSMISSION_CHART_VERSION = 0.1.0
+RADARR_CHART_VERSION = 21.5.2
+SONARR_CHART_VERSION = 21.5.3
+TRANSMISSION_CHART_VERSION = 20.5.2
 NAMESPACE = media
 
 all: build
@@ -16,57 +17,45 @@ build_prowlarr:
 		--include-crds \
 		--values prowlarr-values.yaml > manifests/04-prowlarr-$(PROWLARR_CHART_VERSION).yaml
 
-show_prowlarr_versions:
-	helm repo add truecharts https://charts.truecharts.org
-	helm repo update
-	helm search repo truecharts --versions | grep prowlarr
-
-show_versions:
-	helm repo add pree-helm-charts https://charts.pree.dev
-	helm repo update
-	helm search repo pree-helm-charts --versions
-
-build_radarr:
-	helm template radarr radarr \
-		--repo https://bananaspliff.github.io/geek-charts \
-		--version $(RADARR_CHART_VERSION) \
-		--namespace $(NAMESPACE) \
-		--include-crds \
-		--values radarr-values.yaml > manifests/05-radarr-$(RADARR_CHART_VERSION).yaml
-
-show_radarr_values:
-	helm repo add bananaspliff https://bananaspliff.github.io/geek-charts
-	helm repo update
-	helm search repo bananaspliff --versions
 
 build_sonarr:
 	helm template sonarr sonarr \
-		--repo https://bananaspliff.github.io/geek-charts \
+		--repo https://charts.truecharts.org \
 		--version $(SONARR_CHART_VERSION) \
 		--namespace $(NAMESPACE) \
 		--include-crds \
 		--values sonarr-values.yaml > manifests/06-sonarr-$(SONARR_CHART_VERSION).yaml
 
-show_sonarr_values:
-	helm repo add bananaspliff https://bananaspliff.github.io/geek-charts
+build_radarr:
+	helm template radarr radarr \
+		--repo https://charts.truecharts.org \
+		--version $(RADARR_CHART_VERSION) \
+		--namespace $(NAMESPACE) \
+		--include-crds \
+		--values radarr-values.yaml > manifests/05-radarr-$(RADARR_CHART_VERSION).yaml
+
+build_transmission:
+	helm template transmission transmission \
+		--repo https://charts.truecharts.org \
+		--version $(TRANSMISSION_CHART_VERSION) \
+		--namespace $(NAMESPACE) \
+		--include-crds \
+		--values transmission-values.yaml > manifests/07-transmission-$(TRANSMISSION_CHART_VERSION).yaml
+
+build_plex:
+	helm template plex plex \
+		--repo https://charts.truecharts.org \
+		--version $(PLEX_CHART_VERSION) \
+		--namespace $(NAMESPACE) \
+		--include-crds \
+		--values plex-values.yaml > manifests/08-plex-$(PLEX_CHART_VERSION).yaml
+
+show_versions:
+	helm repo add pree-helm-charts https://charts.pree.dev
 	helm repo update
-	helm search repo bananaspliff --versions
+	helm search repo truecharts --versions | grep -e prowlarr -e radarr -e sonarr -e transmission -e plex
 
-
-# build_transmission:
-# 	helm template transmission-openvpn transmission-openvpn \
-# 		--repo https://bananaspliff.github.io/geek-charts \
-# 		--version $(TRANSMISSION_CHART_VERSION) \
-# 		--namespace $(NAMESPACE) \
-# 		--include-crds \
-# 		--values transmission-openvpn-values.yaml > manifests/06-transmission-openvpn-$(TRANSMISSION_CHART_VERSION).yaml
-#
-# show_transmission_values:
-# 	helm repo add bananaspliff https://bananaspliff.github.io/geek-charts
-# 	helm repo update
-# 	helm search repo bananaspliff --versions
-
-build: build_prowlarr build_radarr build_sonarr
+build: build_prowlarr build_radarr build_sonarr build_transmission build_plex
 
 install:
 	kubectl apply -f manifests -n $(NAMESPACE)
@@ -84,3 +73,4 @@ help:
 	@echo 'build                        - build template for version'
 	@echo 'install                      - install pihole'
 	@echo 'clean                        - clean resources'
+	@echo 'show_versions                - show chart versions'

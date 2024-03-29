@@ -92,14 +92,16 @@ workload:
 persistence:
   config:
     enabled: true
-    existingClaim: media-pvc
+    existingClaim: media-configs-pvc
     targetSelector:
       main:
         main:
           mountPath: /config
+          subPath: prowlarr
       exportarr:
         exportarr:
           mountPath: /config
+          subPath: prowlarr
           readOnly: true
 
 configmap:

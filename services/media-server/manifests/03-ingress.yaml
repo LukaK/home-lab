@@ -44,7 +44,7 @@ spec:
             service:
               name: "sonarr"
               port:
-                number: 80
+                number: 8989
   - host: radarr.media.cluster.lab
     http:
       paths:
@@ -54,7 +54,7 @@ spec:
             service:
               name: "radarr"
               port:
-                number: 80
+                number: 7878
   - host: prowlarr.media.cluster.lab
     http:
       paths:
@@ -74,7 +74,7 @@ spec:
             service:
               name: "transmission"
               port:
-                number: 80
+                number: 10109
   - host: plex.media.cluster.lab
     http:
       paths:

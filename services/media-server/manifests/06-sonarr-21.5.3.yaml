@@ -1,0 +1,240 @@
+---
+# Source: sonarr/templates/common.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: sonarr
+  namespace: media
+  labels:
+    app: "sonarr-21.5.3"
+    app.kubernetes.io/instance: "sonarr"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "sonarr"
+    app.kubernetes.io/version: "4.0.2.1183"
+    helm-revision: "1"
+    helm.sh/chart: "sonarr-21.5.3"
+    release: "sonarr"
+    service.name: "main"
+spec:
+  type: ClusterIP
+  publishNotReadyAddresses: false
+  ports:
+    - name: main
+      port: 8989
+      protocol: TCP
+      targetPort: 8989
+  selector:
+    pod.name: main
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/instance: sonarr
+---
+# Source: sonarr/templates/common.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarr
+  namespace: media
+  labels:
+    app: "sonarr-21.5.3"
+    app.kubernetes.io/instance: "sonarr"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "sonarr"
+    app.kubernetes.io/version: "4.0.2.1183"
+    helm-revision: "1"
+    helm.sh/chart: "sonarr-21.5.3"
+    release: "sonarr"
+spec:  
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      pod.name: main
+      app.kubernetes.io/name: sonarr
+      app.kubernetes.io/instance: sonarr
+  template:
+    metadata:
+      labels:
+        app: "sonarr-21.5.3"
+        app.kubernetes.io/instance: "sonarr"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/name: "sonarr"
+        app.kubernetes.io/version: "4.0.2.1183"
+        helm-revision: "1"
+        helm.sh/chart: "sonarr-21.5.3"
+        pod.lifecycle: "permanent"
+        pod.name: "main"
+        release: "sonarr"
+      annotations:
+        rollme: "AR4cN"
+    spec:
+      serviceAccountName: default
+      automountServiceAccountToken: false
+      runtimeClassName: 
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      shareProcessNamespace: false
+      enableServiceLinks: false
+      restartPolicy: Always
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      topologySpreadConstraints:
+        - maxSkew: 1
+          whenUnsatisfiable: ScheduleAnyway
+          topologyKey: "truecharts.org/rack"
+          labelSelector:
+            matchLabels:      
+              pod.name: main
+              app.kubernetes.io/name: sonarr
+              app.kubernetes.io/instance: sonarr
+          nodeAffinityPolicy: Honor
+          nodeTaintsPolicy: Honor
+        - maxSkew: 1
+          whenUnsatisfiable: ScheduleAnyway
+          topologyKey: "kubernetes.io/hostname"
+          labelSelector:
+            matchLabels:      
+              pod.name: main
+              app.kubernetes.io/name: sonarr
+              app.kubernetes.io/instance: sonarr
+          nodeAffinityPolicy: Honor
+          nodeTaintsPolicy: Honor
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
+      terminationGracePeriodSeconds: 60
+      securityContext:
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 568
+        sysctls: []
+      hostUsers: true
+      containers:
+        - name: sonarr
+          image: ghcr.io/onedr0p/sonarr:4.0.2.1183@sha256:bbfcda0754272515ce12972924652699934074b46b11d27bc515c8ea5fb870f5
+          imagePullPolicy: IfNotPresent
+          tty: false
+          stdin: false
+          ports:
+            - name: main
+              containerPort: 8989
+              protocol: TCP
+              hostPort: null
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: false
+              subPath: sonarr
+            - name: data
+              mountPath: /data
+              readOnly: false
+            - name: devshm
+              mountPath: /dev/shm
+              readOnly: false
+            - name: shared
+              mountPath: /shared
+              readOnly: false
+            - name: tmp
+              mountPath: /tmp
+              readOnly: false
+            - name: varlogs
+              mountPath: /var/logs
+              readOnly: false
+            - name: varrun
+              mountPath: /var/run
+              readOnly: false
+          livenessProbe:
+            httpGet:
+              port: 8989
+              path: /ping
+              scheme: HTTP
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              port: 8989
+              path: /ping
+              scheme: HTTP
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            successThreshold: 2
+            timeoutSeconds: 5
+            periodSeconds: 10
+          startupProbe:
+            httpGet:
+              port: 8989
+              path: /ping
+              scheme: HTTP
+            initialDelaySeconds: 10
+            failureThreshold: 60
+            successThreshold: 1
+            timeoutSeconds: 2
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 10m
+              memory: 50Mi
+            limits: 
+              cpu: 4000m 
+              memory: 8Gi
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 568
+            runAsGroup: 568
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              add: []
+              drop:
+                - ALL
+          env:
+            - name: "TZ"
+              value: "UTC"
+            - name: "UMASK"
+              value: "0022"
+            - name: "UMASK_SET"
+              value: "0022"
+            - name: "NVIDIA_VISIBLE_DEVICES"
+              value: "void"
+            - name: "S6_READ_ONLY_ROOT"
+              value: "1"
+            - name: "SONARR__AUTHENTICATION_METHOD"
+              value: ""
+            - name: "SONARR__PORT"
+              value: "8989"
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: media-configs-pvc
+        - name: data
+          persistentVolumeClaim:
+            claimName: media-data-pvc
+        - name: devshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi
+        - name: shared
+          emptyDir: {}
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi
+        - name: varlogs
+          emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi
+        - name: varrun
+          emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi

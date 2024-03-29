@@ -24,6 +24,9 @@ Requirements:
 make && make install
 ```
 
+## NFS
+Open nfs share for the data and create directory strcture `library/{tv,movies}` and `downloads/complete`.
+
 ## prowlarr
 
 Configuration settings for radarr and sonarr is in `settings -> apps`.

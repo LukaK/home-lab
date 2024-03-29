@@ -1,0 +1,284 @@
+---
+# Source: transmission/templates/common.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: transmission
+  namespace: media
+  labels:
+    app: "transmission-20.5.2"
+    app.kubernetes.io/instance: "transmission"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "transmission"
+    app.kubernetes.io/version: "4.0.5"
+    helm-revision: "1"
+    helm.sh/chart: "transmission-20.5.2"
+    release: "transmission"
+    service.name: "main"
+spec:
+  type: ClusterIP
+  publishNotReadyAddresses: false
+  ports:
+    - name: main
+      port: 10109
+      protocol: TCP
+      targetPort: 10109
+  selector:
+    pod.name: main
+    app.kubernetes.io/name: transmission
+    app.kubernetes.io/instance: transmission
+---
+# Source: transmission/templates/common.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: transmission-torrent
+  namespace: media
+  labels:
+    app: "transmission-20.5.2"
+    app.kubernetes.io/instance: "transmission"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "transmission"
+    app.kubernetes.io/version: "4.0.5"
+    helm-revision: "1"
+    helm.sh/chart: "transmission-20.5.2"
+    release: "transmission"
+    service.name: "torrent"
+spec:
+  type: ClusterIP
+  publishNotReadyAddresses: false
+  ports:
+    - name: torrent
+      port: 51414
+      protocol: TCP
+      targetPort: 51414 
+    - name: torrentudp
+      port: 51414
+      protocol: UDP
+      targetPort: 51414
+  selector:
+    pod.name: main
+    app.kubernetes.io/name: transmission
+    app.kubernetes.io/instance: transmission
+---
+# Source: transmission/templates/common.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transmission
+  namespace: media
+  labels:
+    app: "transmission-20.5.2"
+    app.kubernetes.io/instance: "transmission"
+    app.kubernetes.io/managed-by: "Helm"
+    app.kubernetes.io/name: "transmission"
+    app.kubernetes.io/version: "4.0.5"
+    helm-revision: "1"
+    helm.sh/chart: "transmission-20.5.2"
+    release: "transmission"
+spec:  
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      pod.name: main
+      app.kubernetes.io/name: transmission
+      app.kubernetes.io/instance: transmission
+  template:
+    metadata:
+      labels:
+        app: "transmission-20.5.2"
+        app.kubernetes.io/instance: "transmission"
+        app.kubernetes.io/managed-by: "Helm"
+        app.kubernetes.io/name: "transmission"
+        app.kubernetes.io/version: "4.0.5"
+        helm-revision: "1"
+        helm.sh/chart: "transmission-20.5.2"
+        pod.lifecycle: "permanent"
+        pod.name: "main"
+        release: "transmission"
+      annotations:
+        rollme: "pw7UT"
+    spec:
+      serviceAccountName: default
+      automountServiceAccountToken: false
+      runtimeClassName: 
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      shareProcessNamespace: false
+      enableServiceLinks: false
+      restartPolicy: Always
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      topologySpreadConstraints:
+        - maxSkew: 1
+          whenUnsatisfiable: ScheduleAnyway
+          topologyKey: "truecharts.org/rack"
+          labelSelector:
+            matchLabels:      
+              pod.name: main
+              app.kubernetes.io/name: transmission
+              app.kubernetes.io/instance: transmission
+          nodeAffinityPolicy: Honor
+          nodeTaintsPolicy: Honor
+        - maxSkew: 1
+          whenUnsatisfiable: ScheduleAnyway
+          topologyKey: "kubernetes.io/hostname"
+          labelSelector:
+            matchLabels:      
+              pod.name: main
+              app.kubernetes.io/name: transmission
+              app.kubernetes.io/instance: transmission
+          nodeAffinityPolicy: Honor
+          nodeTaintsPolicy: Honor
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
+      terminationGracePeriodSeconds: 60
+      securityContext:
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 568
+        sysctls: []
+      hostUsers: true
+      containers:
+        - name: transmission
+          image: ghcr.io/onedr0p/transmission:4.0.5@sha256:166358481989ee720397bcc8b9d683fbb16b9f42088caed2dc4e9f7da116087a
+          imagePullPolicy: IfNotPresent
+          tty: false
+          stdin: false
+          ports:
+            - name: main
+              containerPort: 10109
+              protocol: TCP
+              hostPort: null
+            - name: torrent
+              containerPort: 51414
+              protocol: TCP
+              hostPort: null
+            - name: torrentudp
+              containerPort: 51414
+              protocol: UDP
+              hostPort: null
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: false
+              subPath: transmission
+            - name: data
+              mountPath: /downloads/complete
+              readOnly: false
+              subPath: downloads/complete
+            - name: devshm
+              mountPath: /dev/shm
+              readOnly: false
+            - name: shared
+              mountPath: /shared
+              readOnly: false
+            - name: tmp
+              mountPath: /tmp
+              readOnly: false
+            - name: varlogs
+              mountPath: /var/logs
+              readOnly: false
+            - name: varrun
+              mountPath: /var/run
+              readOnly: false
+          livenessProbe:
+            tcpSocket:
+              port: 10109
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            successThreshold: 1
+            timeoutSeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            tcpSocket:
+              port: 10109
+            initialDelaySeconds: 10
+            failureThreshold: 5
+            successThreshold: 2
+            timeoutSeconds: 5
+            periodSeconds: 10
+          startupProbe:
+            tcpSocket:
+              port: 10109
+            initialDelaySeconds: 10
+            failureThreshold: 60
+            successThreshold: 1
+            timeoutSeconds: 2
+            periodSeconds: 5
+          resources:
+            requests:
+              cpu: 10m
+              memory: 50Mi
+            limits: 
+              cpu: 4000m 
+              memory: 8Gi
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 568
+            runAsGroup: 568
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            privileged: false
+            seccompProfile:
+              type: RuntimeDefault
+            capabilities:
+              add: []
+              drop:
+                - ALL
+          env:
+            - name: "TZ"
+              value: "UTC"
+            - name: "UMASK"
+              value: "0022"
+            - name: "UMASK_SET"
+              value: "0022"
+            - name: "NVIDIA_VISIBLE_DEVICES"
+              value: "void"
+            - name: "S6_READ_ONLY_ROOT"
+              value: "1"
+            - name: "TRANSMISSION__DOWNLOAD_DIR"
+              value: "/downloads/complete"
+            - name: "TRANSMISSION__INCOMPLETE_DIR"
+              value: "/downloads/incomplete"
+            - name: "TRANSMISSION__INCOMPLETE_DIR_ENABLED"
+              value: "true"
+            - name: "TRANSMISSION__PEER_PORT"
+              value: "51414"
+            - name: "TRANSMISSION__RPC_PORT"
+              value: "10109"
+            - name: "TRANSMISSION__RPC_URL"
+              value: "/transmission"
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: media-configs-pvc
+        - name: data
+          persistentVolumeClaim:
+            claimName: media-data-pvc
+        - name: devshm
+          emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi
+        - name: shared
+          emptyDir: {}
+        - name: tmp
+          emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi
+        - name: varlogs
+          emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi
+        - name: varrun
+          emptyDir:
+            medium: Memory
+            sizeLimit: 8Gi
