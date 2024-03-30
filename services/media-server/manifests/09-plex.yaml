@@ -107,7 +107,7 @@ spec:
               value: "991"
             # - name: "UMASK"
             #   value: "002"
-            - name: "PLEX_CLAIM_TOKEN"
+            - name: "PLEX_CLAIM"
               valueFrom:
                 secretKeyRef:
                   name: services-secret

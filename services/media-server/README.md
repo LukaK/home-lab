@@ -20,13 +20,15 @@ Requirements:
 - make sure that `.cluster.loca` subdomain resolves to ingress controlelr
 
 ```
+# add secrets file services-secret.yaml
+# get plex claim on https://plex.tv/claim
+cp services-secret.template.yaml services-secret.yaml
+echo -n 'claim' | base64 -w0 >> services-secret.yaml
+vi services-secret.yaml
+
 # deploy resources
 make install
 ```
-
-## NFS
-Open nfs share for the data and create directory strcture `library/{tv,movies}` and `downloads/complete`.
-Permisssion issues....
 
 ## prowlarr
 
