@@ -47,7 +47,9 @@ Sonarr configuration:
 Configuration settings for transmission client is in `settings -> download clients`
 
 Configuration:
-- go to `Settings -> Media Management` and update root folder to `/data/library/movies`
+- go to `Settings -> Media Management`, update root folder to `/data/library/movies` and enable import of extra files with advanced
+- go to `Settings -> Metadata` and activate metadata collection
+- go to `Settings -> General -> Analytics` and disable analytics collection
 
 Transmission configuration:
 - change `Host: transmission`
@@ -61,6 +63,7 @@ Configuration settings for transmission client is in `settings -> download clien
 Configuration:
 - go to `Settings -> Media Management` and update root folder to `/tv`
 - go to `Settings -> metadata` and update activate creation of metadata for plex
+- go to `Settings -> General -> Analytics` and disable analytics collection
 
 Transmission configuration:
 - change `Host: transmission`
