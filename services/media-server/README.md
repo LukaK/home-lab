@@ -79,3 +79,11 @@ Configuration:
 ## plex configuration
 Configuration:
 - add movie and show library
+
+## TODO
+- fix image versions
+- fix delete between transmission and sonarr/radarr
+- merge secrets for transmission and plex
+- add security context for containers to run as normal users
+- add instructions how to setup firewall and stream it on local network
+- add vpn support
