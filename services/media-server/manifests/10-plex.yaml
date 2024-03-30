@@ -49,14 +49,14 @@ spec:
               protocol: TCP
               hostPort: null
           volumeMounts:
-            - name: config
+            - name: media
               mountPath: /config
               readOnly: false
-              subPath: plex
-            - name: data
+              subPath: configs/plex
+            - name: media
               mountPath: /library
               readOnly: false
-              subPath: library
+              subPath: data/library
           # livenessProbe:
           #   httpGet:
           #     port: 32400
@@ -87,8 +87,6 @@ spec:
           #   periodSeconds: 5
           resources:
             requests:
-              # cpu: 10m
-              # memory: 50Mi
               cpu: 2
               memory: 4Gi
             limits:
@@ -97,15 +95,18 @@ spec:
           env:
             - name: "TZ"
               value: "UTC"
-            - name: "PLEX_CLAIM"
+            - name: "PUID"
+              value: "1000"
+            - name: "PGID"
+              value: "1000"
+            - name: "UMASK"
+              value: "002"
+            - name: "PLEX_CLAIM_TOKEN"
               valueFrom:
                 secretKeyRef:
                   name: plex-secret
                   key: claim
       volumes:
-        - name: config
+        - name: media
           persistentVolumeClaim:
-            claimName: media-configs-pvc
-        - name: data
-          persistentVolumeClaim:
-            claimName: media-data-pvc
+            claimName: media-pvc

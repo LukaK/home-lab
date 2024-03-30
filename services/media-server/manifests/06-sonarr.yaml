@@ -49,13 +49,14 @@ spec:
               protocol: TCP
               hostPort: null
           volumeMounts:
-            - name: config
+            - name: media
               mountPath: /config
               readOnly: false
-              subPath: sonarr
-            - name: data
+              subPath: configs/sonarr
+            - name: media
               mountPath: /data
               readOnly: false
+              subPath: data
           # livenessProbe:
           #   httpGet:
           #     port: 8989
@@ -88,8 +89,6 @@ spec:
           #   periodSeconds: 5
           resources:
             requests:
-              # cpu: 10m
-              # memory: 50Mi
               cpu: 1
               memory: 2Gi
             limits:
@@ -102,10 +101,9 @@ spec:
               value: "1000"
             - name: "PGID"
               value: "1000"
+            - name: "UMASK"
+              value: "002"
       volumes:
-        - name: config
+        - name: media
           persistentVolumeClaim:
-            claimName: media-configs-pvc
-        - name: data
-          persistentVolumeClaim:
-            claimName: media-data-pvc
+            claimName: media-pvc

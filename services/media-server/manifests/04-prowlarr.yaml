@@ -49,10 +49,10 @@ spec:
               protocol: TCP
               hostPort: null
           volumeMounts:
-            - name: config
+            - name: media
               mountPath: /config
               readOnly: false
-              subPath: prowlarr
+              subPath: configs/prowlarr
           # livenessProbe:
           #   httpGet:
           #     port: 9696
@@ -96,6 +96,6 @@ spec:
             - name: "PGID"
               value: "1000"
       volumes:
-        - name: config
+        - name: media
           persistentVolumeClaim:
-            claimName: media-configs-pvc
+            claimName: media-pvc

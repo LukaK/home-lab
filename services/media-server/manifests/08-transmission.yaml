@@ -80,14 +80,14 @@ spec:
               protocol: UDP
               hostPort: null
           volumeMounts:
-            - name: config
+            - name: media
               mountPath: /config
               readOnly: false
-              subPath: transmission
-            - name: data
+              subPath: configs/transmission
+            - name: media
               mountPath: /downloads/complete
               readOnly: false
-              subPath: downloads/complete
+              subPath: data/downloads/complete
           # livenessProbe:
           #   tcpSocket:
           #     port: 9091
@@ -137,9 +137,6 @@ spec:
                   name: transmission-secret
                   key: password
       volumes:
-        - name: config
+        - name: media
           persistentVolumeClaim:
-            claimName: media-configs-pvc
-        - name: data
-          persistentVolumeClaim:
-            claimName: media-data-pvc
+            claimName: media-pvc
