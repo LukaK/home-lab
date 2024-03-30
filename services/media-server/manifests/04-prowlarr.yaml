@@ -39,6 +39,11 @@ spec:
         app: "prowlarr"
         pod.name: "main"
     spec:
+      # securityContext:
+      #   runAsUser: 911
+      #   runAsGroup: 911
+      #   fsGroup: 911
+      #   fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: prowlarr
           image: lscr.io/linuxserver/prowlarr:latest
@@ -92,9 +97,9 @@ spec:
             - name: "TZ"
               value: "UTC"
             - name: "PUID"
-              value: "1000"
+              value: "991"
             - name: "PGID"
-              value: "1000"
+              value: "991"
       volumes:
         - name: media
           persistentVolumeClaim:

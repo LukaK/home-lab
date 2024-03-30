@@ -39,6 +39,12 @@ spec:
         app: "plex"
         pod.name: "main"
     spec:
+      # TODO: use init container
+      # securityContext:
+      #   runAsUser: 911
+      #   runAsGroup: 911
+      #   fsGroup: 911
+      #   fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: plex
           image: lscr.io/linuxserver/plex:latest
@@ -96,11 +102,11 @@ spec:
             - name: "TZ"
               value: "UTC"
             - name: "PUID"
-              value: "1000"
+              value: "991"
             - name: "PGID"
-              value: "1000"
-            - name: "UMASK"
-              value: "002"
+              value: "991"
+            # - name: "UMASK"
+            #   value: "002"
             - name: "PLEX_CLAIM_TOKEN"
               valueFrom:
                 secretKeyRef:

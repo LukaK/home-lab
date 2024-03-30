@@ -11,3 +11,28 @@ spec:
     requests:
       storage: 500Gi
   storageClassName: nfs-client
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: media-setup
+  namespace: media
+spec:
+  template:
+    spec:
+      containers:
+      - name: setup
+        image: busybox:1.28
+        command: ["sh", "-c", "mkdir -p /data/downloads/complete /data/library/tv /data/library/movies && chgrp -R 991 /data && chmod -R 775 /data && chmod g+s /data"]
+        volumeMounts:
+          - name: media
+            mountPath: /data
+            readOnly: false
+            subPath: data
+      restartPolicy: Never
+      volumes:
+        - name: media
+          persistentVolumeClaim:
+            claimName: media-pvc
+

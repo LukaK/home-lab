@@ -62,6 +62,11 @@ spec:
         app: "transmission"
         pod.name: "main"
     spec:
+      # securityContext:
+      #   runAsUser: 911
+      #   runAsGroup: 911
+      #   fsGroup: 911
+      #   fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: transmission
           image: lscr.io/linuxserver/transmission:latest
@@ -123,9 +128,9 @@ spec:
             - name: "TZ"
               value: "UTC"
             - name: "PUID"
-              value: "1000"
+              value: "991"
             - name: "PGID"
-              value: "1000"
+              value: "991"
             - name: "USER"
               valueFrom:
                 secretKeyRef:
