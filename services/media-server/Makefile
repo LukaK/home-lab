@@ -5,8 +5,7 @@ NAMESPACE = media
 all: build
 
 build:
-	kubeseal -f transmission-secret.yaml -w manifests/07-transmission-sealedsecret.yaml
-	kubeseal -f plex-secret.yaml -w manifests/09-plex-sealedsecret.yaml
+	kubeseal -f services-secret.yaml -w manifests/04-services-sealedsecret.yaml
 
 install:
 	kubectl apply -f manifests -n $(NAMESPACE)

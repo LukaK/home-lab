@@ -69,7 +69,7 @@ spec:
       #   fsGroupChangePolicy: "OnRootMismatch"
       containers:
         - name: transmission
-          image: lscr.io/linuxserver/transmission:latest
+          image: lscr.io/linuxserver/transmission:4.0.5@sha256:961d37559bf12aa0820137a7575419ba450b7211a2318d90cf4a351877f738a5
           imagePullPolicy: IfNotPresent
           ports:
             - name: main
@@ -134,13 +134,13 @@ spec:
             - name: "USER"
               valueFrom:
                 secretKeyRef:
-                  name: transmission-secret
-                  key: username
+                  name: services-secret
+                  key: transmission_username
             - name: "PASS"
               valueFrom:
                 secretKeyRef:
-                  name: transmission-secret
-                  key: password
+                  name: services-secret
+                  key: transmission_password
       volumes:
         - name: media
           persistentVolumeClaim:

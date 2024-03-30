@@ -2,66 +2,71 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: prowlarr
+  name: plex
   namespace: media
   labels:
-    app: "prowlarr"
+    app: "plex"
 spec:
   type: ClusterIP
   publishNotReadyAddresses: false
   ports:
     - name: main
-      port: 9696
+      port: 32400
       protocol: TCP
-      targetPort: 9696
+      targetPort: 32400
   selector:
-    app: prowlarr
+    app: plex
     pod.name: main
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: prowlarr
+  name: plex
   namespace: media
   labels:
-    app: "prowlarr"
+    app: "plex"
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: prowlarr
+      app: plex
       pod.name: main
   template:
     metadata:
       labels:
-        app: "prowlarr"
+        app: "plex"
         pod.name: "main"
     spec:
+      # TODO: use init container
       # securityContext:
       #   runAsUser: 911
       #   runAsGroup: 911
       #   fsGroup: 911
       #   fsGroupChangePolicy: "OnRootMismatch"
       containers:
-        - name: prowlarr
-          image: lscr.io/linuxserver/prowlarr:latest
+        - name: plex
+          image: lscr.io/linuxserver/plex:1.40.1@sha256:34780a5be3a38bc83458082e822f259b28608ad8c75d45654c86a3edeab768ea
           imagePullPolicy: IfNotPresent
           ports:
             - name: main
-              containerPort: 9696
+              containerPort: 32400
               protocol: TCP
               hostPort: null
           volumeMounts:
             - name: media
               mountPath: /config
               readOnly: false
-              subPath: configs/prowlarr
+              subPath: configs/plex
+            - name: media
+              mountPath: /library
+              readOnly: false
+              subPath: data/library
           # livenessProbe:
           #   httpGet:
-          #     port: 9696
-          #     path: /ping
+          #     port: 32400
+          #     path: /identity
           #     scheme: HTTP
           #   initialDelaySeconds: 10
           #   failureThreshold: 5
@@ -70,8 +75,8 @@ spec:
           #   periodSeconds: 10
           # readinessProbe:
           #   httpGet:
-          #     port: 9696
-          #     path: /ping
+          #     port: 32400
+          #     path: /identity
           #     scheme: HTTP
           #   initialDelaySeconds: 10
           #   failureThreshold: 5
@@ -80,7 +85,7 @@ spec:
           #   periodSeconds: 10
           # startupProbe:
           #   tcpSocket:
-          #     port: 9696
+          #     port: 32400
           #   initialDelaySeconds: 10
           #   failureThreshold: 60
           #   successThreshold: 1
@@ -88,8 +93,8 @@ spec:
           #   periodSeconds: 5
           resources:
             requests:
-              cpu: 10m
-              memory: 50Mi
+              cpu: 2
+              memory: 4Gi
             limits:
               cpu: 4000m
               memory: 8Gi
@@ -100,6 +105,13 @@ spec:
               value: "991"
             - name: "PGID"
               value: "991"
+            # - name: "UMASK"
+            #   value: "002"
+            - name: "PLEX_CLAIM_TOKEN"
+              valueFrom:
+                secretKeyRef:
+                  name: services-secret
+                  key: plex_claim
       volumes:
         - name: media
           persistentVolumeClaim:

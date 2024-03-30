@@ -2,71 +2,70 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: plex
+  name: sonarr
   namespace: media
   labels:
-    app: "plex"
+    app: "sonarr"
 spec:
   type: ClusterIP
   publishNotReadyAddresses: false
   ports:
     - name: main
-      port: 32400
+      port: 8989
       protocol: TCP
-      targetPort: 32400
+      targetPort: 8989
   selector:
-    app: plex
+    app: sonarr
     pod.name: main
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: plex
+  name: sonarr
   namespace: media
   labels:
-    app: "plex"
+    app: "sonarr"
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: plex
+      app: sonarr
       pod.name: main
   template:
     metadata:
       labels:
-        app: "plex"
+        app: "sonarr"
         pod.name: "main"
     spec:
-      # TODO: use init container
       # securityContext:
       #   runAsUser: 911
       #   runAsGroup: 911
       #   fsGroup: 911
       #   fsGroupChangePolicy: "OnRootMismatch"
       containers:
-        - name: plex
-          image: lscr.io/linuxserver/plex:latest
+        - name: sonarr
+          image: lscr.io/linuxserver/sonarr:4.0.2@sha256:24b7f3f1c9ed065adc3ca7c5440944560b010a38e9bfcb7c1d8e9c965cbc8ea8
           imagePullPolicy: IfNotPresent
           ports:
             - name: main
-              containerPort: 32400
+              containerPort: 8989
               protocol: TCP
               hostPort: null
           volumeMounts:
             - name: media
               mountPath: /config
               readOnly: false
-              subPath: configs/plex
+              subPath: configs/sonarr
             - name: media
-              mountPath: /library
+              mountPath: /data
               readOnly: false
-              subPath: data/library
+              subPath: data
           # livenessProbe:
           #   httpGet:
-          #     port: 32400
-          #     path: /identity
+          #     port: 8989
+          #     path: /ping
           #     scheme: HTTP
           #   initialDelaySeconds: 10
           #   failureThreshold: 5
@@ -75,8 +74,8 @@ spec:
           #   periodSeconds: 10
           # readinessProbe:
           #   httpGet:
-          #     port: 32400
-          #     path: /identity
+          #     port: 8989
+          #     path: /ping
           #     scheme: HTTP
           #   initialDelaySeconds: 10
           #   failureThreshold: 5
@@ -84,8 +83,10 @@ spec:
           #   timeoutSeconds: 5
           #   periodSeconds: 10
           # startupProbe:
-          #   tcpSocket:
-          #     port: 32400
+          #   httpGet:
+          #     port: 8989
+          #     path: /ping
+          #     scheme: HTTP
           #   initialDelaySeconds: 10
           #   failureThreshold: 60
           #   successThreshold: 1
@@ -93,8 +94,8 @@ spec:
           #   periodSeconds: 5
           resources:
             requests:
-              cpu: 2
-              memory: 4Gi
+              cpu: 1
+              memory: 2Gi
             limits:
               cpu: 4000m
               memory: 8Gi
@@ -107,11 +108,6 @@ spec:
               value: "991"
             # - name: "UMASK"
             #   value: "002"
-            - name: "PLEX_CLAIM_TOKEN"
-              valueFrom:
-                secretKeyRef:
-                  name: plex-secret
-                  key: claim
       volumes:
         - name: media
           persistentVolumeClaim:
