@@ -52,6 +52,7 @@ Configuration:
 - go to `Settings -> Media Management`, update root folder to `/data/library/movies` and enable import of extra files with advanced
 - go to `Settings -> Metadata` and activate metadata collection
 - go to `Settings -> General -> Analytics` and disable analytics collection
+- go to `Settings -> Profiles` and update profiles
 
 Transmission configuration:
 - change `Host: transmission`
@@ -66,6 +67,7 @@ Configuration:
 - go to `Settings -> Media Management` and update root folder to `/data/library/tv`
 - go to `Settings -> metadata` and update activate creation of metadata for plex
 - go to `Settings -> General -> Analytics` and disable analytics collection
+- go to `Settings -> Profiles` and update profiles
 
 Transmission configuration:
 - change `Host: transmission`
@@ -79,7 +81,8 @@ Configuration:
 - add movie and show library
 
 ## TODO
+- add vpn support
+- transcoder for plex, passing video card to docker worker and taints
 - fix delete between transmission and sonarr/radarr
 - add security context for containers to run as normal users
 - add instructions how to setup firewall and stream it on local network
-- add vpn support

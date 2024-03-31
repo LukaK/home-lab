@@ -121,9 +121,9 @@ spec:
             requests:
               cpu: 10m
               memory: 50Mi
-            limits:
-              cpu: 4000m
-              memory: 20Gi
+            # limits:
+            #   cpu: 4000m
+            #   memory: 20Gi
           env:
             - name: "TZ"
               value: "UTC"
