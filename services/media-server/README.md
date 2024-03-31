@@ -63,7 +63,7 @@ Transmission configuration:
 Configuration settings for transmission client is in `settings -> download clients`
 
 Configuration:
-- go to `Settings -> Media Management` and update root folder to `/tv`
+- go to `Settings -> Media Management` and update root folder to `/data/library/tv`
 - go to `Settings -> metadata` and update activate creation of metadata for plex
 - go to `Settings -> General -> Analytics` and disable analytics collection
 
@@ -73,17 +73,13 @@ Transmission configuration:
 - change mapping so that `/downloads` points to `/data/downloads`
 
 
-## transmission configuration
-Configuration:
-- change complted directory to `/downloads/transmission`
-
-
 ## plex configuration
 Configuration:
+- go to `Settings -> Authorized devices` and remove old plex server if it is deplicated
 - add movie and show library
 
 ## TODO
-- add security context for containers to run as normal users
 - fix delete between transmission and sonarr/radarr
+- add security context for containers to run as normal users
 - add instructions how to setup firewall and stream it on local network
 - add vpn support
