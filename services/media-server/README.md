@@ -79,6 +79,7 @@ Transmission configuration:
 Configuration:
 - go to `Settings -> Authorized devices` and remove old plex server if it is deplicated
 - add movie and show library
+- go to `Settings -> Library -> Scan my library automatically`
 
 ## TODO
 - add vpn support

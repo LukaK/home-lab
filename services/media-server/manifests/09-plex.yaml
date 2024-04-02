@@ -45,6 +45,7 @@ spec:
       #   runAsGroup: 911
       #   fsGroup: 911
       #   fsGroupChangePolicy: "OnRootMismatch"
+      terminationGracePeriodSeconds: 60
       containers:
         - name: plex
           image: lscr.io/linuxserver/plex:latest
