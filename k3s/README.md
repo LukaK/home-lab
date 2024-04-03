@@ -45,3 +45,7 @@ terraform apply
 # resize disks manually for worker nodes
 
 ```
+
+# synology-csi
+
+## Synology configuration

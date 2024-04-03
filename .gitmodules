@@ -4,6 +4,3 @@
 [submodule "kubernetes/ansible"]
 	path = k3s/ansible
 	url = https://github.com/techno-tim/k3s-ansible.git
-[submodule "k3s/synology-csi"]
-	path = k3s/synology-csi
-	url = https://github.com/SynologyOpenSource/synology-csi.git
