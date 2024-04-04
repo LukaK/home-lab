@@ -3,8 +3,8 @@ clients:
   - host: 10.0.10.96
     port: 5000
     https: false
-    username: storage-user-k8
-    password: ^v>^*{!e@sBwg8lJ}kcK
+    username: # username
+    password: # password
 
 #host:                      # ipv4 address or domain of the DSM
 #port:                      # port for connecting to the DSM
