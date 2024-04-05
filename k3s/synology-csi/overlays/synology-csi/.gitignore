@@ -1,1 +1,5 @@
-client-info.yml
+/*
+! client-info-sealedsecret.yaml
+! client-info-template.yml
+! kustomization.yaml
+! storageclass.yaml
