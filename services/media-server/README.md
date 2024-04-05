@@ -33,7 +33,7 @@ make install
 ## prowlarr
 
 Configuration settings for radarr and sonarr is in `settings -> apps`.
-Configuration settings for transmission client is in `settings -> download client`
+Add indexes.
 
 Radarr configuration:
 - go to `radarr.media.cluster.lab -> settings -> general` and copy token to prowlarr `API Key` field

@@ -1,5 +1,18 @@
 ---
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: transmission-config
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: synology-iscsi-storage
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: transmission
@@ -85,10 +98,9 @@ spec:
               protocol: UDP
               hostPort: null
           volumeMounts:
-            - name: media
+            - name: config
               mountPath: /config
               readOnly: false
-              subPath: configs/transmission
             - name: media
               mountPath: /downloads/complete
               readOnly: false
@@ -145,3 +157,6 @@ spec:
         - name: media
           persistentVolumeClaim:
             claimName: media-pvc
+        - name: config
+          persistentVolumeClaim:
+            claimName: transmission-config

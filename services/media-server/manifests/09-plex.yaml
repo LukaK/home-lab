@@ -1,5 +1,18 @@
 ---
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-config
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  storageClassName: synology-iscsi-storage
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: plex
@@ -56,10 +69,9 @@ spec:
               protocol: TCP
               hostPort: null
           volumeMounts:
-            - name: media
+            - name: config
               mountPath: /config
               readOnly: false
-              subPath: configs/plex
             - name: media
               mountPath: /library
               readOnly: false
@@ -117,3 +129,6 @@ spec:
         - name: media
           persistentVolumeClaim:
             claimName: media-pvc
+        - name: config
+          persistentVolumeClaim:
+            claimName: plex-config
