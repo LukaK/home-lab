@@ -1,18 +1,26 @@
-# CSI deployments
-You can find the general CSI snapshotter deployment under the `base` directory. This will deploy
-all needed components to use volume snapshots later (only needed when your CSI driver supports snapshots)
+# synology-cs
 
-## CSI Synology driver
+Resources for creating iscsi drives on synology nas and snapshots.
 
-The `overlays/synology-csi` folder contains the synology-csi driver deployment (including snapshotter).
-In order to get the configuration adjusted to your environment, you need to update the following files:
+## Installation
 
-- `overlays/synology-csi/client-info.yml`: A secret will get generated from this file, including your Synology user credentials
-- `overlays/synology-csi/storageclass.yaml`: You need to adjust the referenced DSM here (which you specified in the `client-info.yml`)
+Prerequisites:
+- go to synology > Users and Groups > create admin user
+- update `overlays/synology-csi/client-info.yml` with your information
+- update `overlays/synology-csi/storageclass.yaml` with your information
 
-To apply the Synology CSI driver and the Kubernetes snapshot controller, issue the following command (needs kustomize to be installed):
-```shell
-kubectl apply -k overlays/synology-csi/
+```
+# build secret and sealed secret from client-info.yml
+make
+
+# install the resources
+make install
+
+# cleanup
+make clean
 ```
 
-More information on the CSI Synology driver can be found [here](https://github.com/SynologyOpenSource/synology-csi).
+
+## Resources
+- CSI Synology driver can be found [here](https://github.com/SynologyOpenSource/synology-csi).
+- blog post [here](https://thedatabaseme.de/2023/09/08/csi-synology-using-synology-csi-driver-in-kubernetes-to-do-snapshots/)
