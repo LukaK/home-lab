@@ -81,6 +81,10 @@ Configuration:
 - add movie and show library
 - go to `Settings -> Library -> Scan my library automatically`
 
+## pfsense configuration
+- Firewall > NAT > Port Forward
+- add forwarding rules for the tv to the cluster metallb of ingress controller ( 10.0.10.82 )
+
 ## TODO
 - add vpn support
 - transcoder for plex, passing video card to docker worker and taints
