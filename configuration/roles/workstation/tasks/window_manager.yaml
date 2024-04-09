@@ -25,6 +25,7 @@
       - terraform
       - python-pynvim
       - python-poetry
+      - act         # github workflow devepment
       - ollama
       - jupyterlab
         # go development environment
