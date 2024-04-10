@@ -201,7 +201,7 @@
       - dropbox
       - zoom
       - slack-desktop
-      - anki-bin
+      - anki
   become: true
   become_user: ansible
 
