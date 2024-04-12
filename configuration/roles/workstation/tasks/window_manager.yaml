@@ -35,6 +35,7 @@
       - ko          # for building images
       - yaegi       # interpreter
       - revive      # linter
+      - jq          # json processing
 
 
 - name: Start ollama
