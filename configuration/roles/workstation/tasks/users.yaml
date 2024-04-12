@@ -104,13 +104,10 @@
   become: true
   become_user: "{{ user.user_name }}"
   ansible.builtin.shell:
-    cmd: "stow --dotfiles --verbose=2 --target {{ item.target }} {{ item.package }}"
+    cmd: "stow --dotfiles --verbose=2 --target ~ ."
     chdir: ~/dotfiles
   register: stow_result
   changed_when: 'stow_result.stderr is search("LINK: ")'
-  loop:
-    - { target: "~/.config", package: "config" }
-    - { target: "~", package: "home" }
 
 
 # NOTE: Remove recursive when you remove submodules from dotfiles
