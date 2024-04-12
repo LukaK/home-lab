@@ -13,6 +13,19 @@ spec:
   storageClassName: synology-iscsi-storage
 ---
 apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: transmission-download-cache
+  namespace: media
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+  storageClassName: synology-iscsi-storage
+---
+apiVersion: v1
 kind: Service
 metadata:
   name: transmission
@@ -101,6 +114,9 @@ spec:
             - name: config
               mountPath: /config
               readOnly: false
+            - name: download-cache
+              mountPath: /downloads/incomplete
+              readOnly: false
             - name: media
               mountPath: /downloads/complete
               readOnly: false
@@ -160,3 +176,6 @@ spec:
         - name: config
           persistentVolumeClaim:
             claimName: transmission-config
+        - name: download-cache
+          persistentVolumeClaim:
+            claimName: transmission-download-cache
