@@ -203,6 +203,7 @@
       - zoom
       - slack-desktop
       - anki
+      - pomatez
   become: true
   become_user: ansible
 
