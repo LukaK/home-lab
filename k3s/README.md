@@ -30,7 +30,7 @@ Requirements:
 
 How to create a proxmox token:
 1. proxmox -> data center -> permissions -> api tokens
-2. add -> choose user -> deselect privilage separation
+2. add -> choose user -> deselect privilege separation
 3. save token id and secret
 
 #### Usage

@@ -9,7 +9,7 @@ spec:
   - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 100Gi
   storageClassName: synology-iscsi-storage
 ---
 apiVersion: v1

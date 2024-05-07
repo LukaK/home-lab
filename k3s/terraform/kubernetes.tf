@@ -52,10 +52,10 @@ resource "proxmox_vm_qemu" "k3s-wrk" {
     full_clone = true
     onboot = true
 
-    cores = 13
+    cores = 6
     sockets = 1
     cpu = "host"
-    memory = 25000
+    memory = 12000
 
     network {
         bridge = "vmbr0"
