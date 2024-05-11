@@ -1,0 +1,37 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+    name: ai-cert
+spec:
+    secretName: ai-tls-secret
+    issuerRef:
+        name: nginx-clusterissuer
+        kind: ClusterIssuer
+    dnsNames:
+        - webui.ai.cluster.lab
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "ai-ingress"
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+      - webui.ai.cluster.lab
+      secretName: ai-tls-secret
+  rules:
+  - host: webui.ai.cluster.lab
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: "open-webui"
+              port:
+                number: 8080

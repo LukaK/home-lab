@@ -1,6 +1,6 @@
 .PHONY: all build install clean
 
-NAMESPACE = monitoring
+NAMESPACE = ai
 
 all: build
 
