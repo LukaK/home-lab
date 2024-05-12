@@ -27,7 +27,7 @@
       - python-poetry
       - github-cli  # github cli
       - act         # github workflow devepment
-      - ollama
+      # - ollama
       - jupyterlab
         # go development environment
       - go
@@ -38,11 +38,11 @@
       - jq          # json processing
 
 
-- name: Start ollama
-  ansible.builtin.service:
-    name: ollama
-    state: started
-    enabled: true
+# - name: Start ollama
+#   ansible.builtin.service:
+#     name: ollama
+#     state: started
+#     enabled: true
 
 
 - name: Install aur development tools
@@ -190,6 +190,7 @@
       - udisks2
       - udiskie
       - blueman
+      - discord
 
 - name: Install aur applications
   kewlfft.aur.aur:
