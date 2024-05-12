@@ -10,6 +10,7 @@
       - nvtop
       - cuda
       - python-pycuda
+      - nvidia-container-toolkit
 
 - name: Install nvidia settings
   kewlfft.aur.aur:
