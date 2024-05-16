@@ -101,6 +101,7 @@
     state: present
     update_cache: true
     name:
+      - ripgrep
       - zip
       - unzip
       - pdftk
