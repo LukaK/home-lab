@@ -67,6 +67,7 @@
       - dialog
       - wpa_supplicant
       - linssid                   # wifi networ analysis
+      - whois
   notify: Restart network manager
 
 
