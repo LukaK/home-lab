@@ -1,5 +1,10 @@
 ---
 
+- name: Install ansible requirements
+  community.general.pacman:
+    state: present
+    name:
+      - python-passlib
 
 - name: Change root password
   ansible.builtin.user:

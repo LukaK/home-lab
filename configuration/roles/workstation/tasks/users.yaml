@@ -84,7 +84,7 @@
   become: true
   become_user: "{{ user.user_name }}"
   ansible.builtin.git:
-    repo: https://github.com/LukaK/spacecow
+    repo: https://github.com/LukaK/nvim.git
     dest: ~/.config/nvim
     update: true
 
