@@ -89,6 +89,31 @@
     update: true
 
 
+# TODO: Add change when
+# FIX: Failing obsidian plugin, create dropbox folder in system space and link it to the users
+- name: Ensure neovim packages are on the latest version
+  become: true
+  become_user: "{{ user.user_name }}"
+  ansible.builtin.shell:
+    cmd: nvim --headless "+Lazy! sync" +qa
+    executable: /bin/zsh
+  register: nvim_package_update_result
+  failed_when: 'nvim_package_update_result.stderr != ""'
+  ignore_errors: true
+
+
+# TODO: Add change when
+# FIX: Failing task when no errosr
+- name: Ensure neovim lsp packages are on the latest version
+  become: true
+  become_user: "{{ user.user_name }}"
+  ansible.builtin.shell:
+    cmd: nvim --headless +MasonUpdate +MasonToolsUpdate +qa
+    executable: /bin/zsh
+  register: nvim_lsp_result
+  ignore_errors: true
+
+
 # TODO: Remove recursive and force when you remove submodules from dotfiles
 - name: Clone dotfiles
   become: true
