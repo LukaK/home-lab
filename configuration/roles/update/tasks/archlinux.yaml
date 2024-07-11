@@ -9,7 +9,6 @@
     state: latest
     name:
       - linux-headers
-  notify: Reboot
 
 - name: Upgrade pacman packages
   community.general.pacman:
